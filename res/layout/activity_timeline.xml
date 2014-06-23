@@ -12,6 +12,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" >
 
-    </ListView>
+    </eu.erikw.PullToRefreshListView>
 
 </RelativeLayout>

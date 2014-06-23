@@ -13,13 +13,26 @@ import org.json.JSONObject;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+@Table(name = "Items")
 public class Tweet {
+	@Column(name = "body")
 	private String body;
+	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	private long uid;
+	@Column(name = "createdAt")
 	private String createdAt;
+	@Column(name = "user")
 	private User user;
 	private transient long createdAtEpoch;
 	
+	// Make sure to have a default constructor for every ActiveAndroid model
+    public Tweet(){
+        super();
+     }
+    
 	public static Tweet fromJSON(JSONObject jsonObject) {
 		Tweet tweet = new Tweet();
 		try {
