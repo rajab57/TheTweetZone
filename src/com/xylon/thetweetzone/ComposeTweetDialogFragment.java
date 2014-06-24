@@ -31,6 +31,9 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 	TextView tvTextCount;
 	Button btnTweet;
 	int totalTweetCount = MAX_COUNT;
+	int twitterGrey;
+	int twitterBlue;
+	int twitterRed;
 	
 	
 	 /** Declaring the interface, to invoke a callback function in the implementing activity class */
@@ -45,32 +48,14 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
 		User userAccount = (User) getArguments().getSerializable("user");
-		final Dialog dialog = new Dialog(getActivity());		
-		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		dialog.setContentView(R.layout.fragment_compose);
-		dialog.getWindow().setBackgroundDrawable(
-				new ColorDrawable(Color.WHITE));
-		dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		dialog.show();
-		
-		// Get all views
-		ImageView ivProfileImage = (ImageView)dialog.findViewById(R.id.ivProfileImage);
-		TextView tvScreenName = (TextView)dialog.findViewById(R.id.tvScreenName);
-		TextView tvScreenName2 = (TextView)dialog.findViewById(R.id.tvScreenName2);
-		
-		ivProfileImage.setImageResource(android.R.color.transparent);
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		//populate view with tweet data
-		imageLoader.displayImage(userAccount.getProfileImageUrl(), ivProfileImage);
-		tvScreenName.setText(userAccount.getName());
-		tvScreenName2.setText("@" + userAccount.getScreenName());
-		
-		btnTweet = (Button)dialog.findViewById(R.id.btnTweet);
-		tvTextCount = (TextView)dialog.findViewById(R.id.tvTextCount);
-		etTweet = (EditText)dialog.findViewById(R.id.etTweet);
-		
+		final Dialog dialog = new Dialog(getActivity());	
+		twitterGrey = getResources().getColor(R.color.twitterGray);
+		twitterBlue = getResources().getColor(R.color.twitterBlue);
+		twitterRed = getResources().getColor(R.color.twitterRed);
+		customizeDialogAppearance(dialog);
+		dialog.show();		
+		getViews(dialog);
+		setUserInfo(dialog, userAccount);
 		disableButton();
 		// Add listeners
 		addTextWatchToTweet();
@@ -80,14 +65,57 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 		return dialog;
 	}
 	
+	private void customizeDialogAppearance(Dialog dialog) {
+		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		dialog.setContentView(R.layout.fragment_compose);
+		// dialog background color = white
+		dialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(Color.WHITE));
+		// make it entire screen size
+		dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+	}
+	
+	private void getViews(Dialog dialog) {
+		// Get all views
+		btnTweet = (Button)dialog.findViewById(R.id.btnTweet);
+		tvTextCount = (TextView)dialog.findViewById(R.id.tvTextCount);
+		etTweet = (EditText)dialog.findViewById(R.id.etTweet);
+		
+		
+	}
+	
+	private void setUserInfo(Dialog dialog, User userAccount) {
+		ImageView ivProfileImage = (ImageView)dialog.findViewById(R.id.ivProfileImage);
+		TextView tvScreenName = (TextView)dialog.findViewById(R.id.tvScreenName);
+		TextView tvScreenName2 = (TextView)dialog.findViewById(R.id.tvScreenName2);
+		ivProfileImage.setImageResource(android.R.color.transparent);
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.displayImage(userAccount.getProfileImageUrl(), ivProfileImage);
+		tvScreenName.setText(userAccount.getName());
+		tvScreenName2.setText("@" + userAccount.getScreenName());
+		
+	}
+	
 	private void disableButton() {
-		btnTweet.getBackground().setColorFilter(0x454099FF, PorterDuff.Mode.MULTIPLY);
+		btnTweet.getBackground().setColorFilter(0x4500aced, PorterDuff.Mode.MULTIPLY);
 		btnTweet.setEnabled(false);
 	}
 	
 	private void enableButton() {
-		btnTweet.getBackground().setColorFilter(0xFF4099FF, PorterDuff.Mode.MULTIPLY);
+		btnTweet.getBackground().clearColorFilter();
+		btnTweet.getBackground().setColorFilter(0xFF00aced, PorterDuff.Mode.MULTIPLY);
 		btnTweet.setEnabled(true);
+	}
+	
+	public void customizeTextCountAppearance(int textcount, int leftCount) {
+		tvTextCount.setText(String.valueOf(leftCount) );
+		if ( textcount > MAX_COUNT ) {
+			tvTextCount.setTextColor(twitterRed);
+		} else
+			tvTextCount.setTextColor(twitterGrey);
+		
 	}
 	
 	public void addTextWatchToTweet() {
@@ -110,7 +138,7 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 				int numChar = s.length();
 				System.out.println("numchar " + numChar);
 				int leftCount = MAX_COUNT - numChar;
-				tvTextCount.setText(String.valueOf(leftCount));
+				customizeTextCountAppearance(numChar, leftCount);
 				if (numChar > 0 && numChar <= MAX_COUNT && !btnTweet.isEnabled())
 					enableButton();
 				else if (numChar <= 0 && numChar > MAX_COUNT && btnTweet.isEnabled())

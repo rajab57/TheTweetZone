@@ -1,5 +1,6 @@
 package com.xylon.thetweetzone.models;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,20 +14,35 @@ import org.json.JSONObject;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table(name = "Items")
-public class Tweet {
+@Table(name = "Tweet")
+public class Tweet extends Model implements Serializable {
 	@Column(name = "body")
-	private String body;
-	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-	private long uid;
+	public String body;
+	
+	@Column(name = "tid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+	public long tid;
+	
 	@Column(name = "createdAt")
-	private String createdAt;
+	public String createdAt;
+	
 	@Column(name = "user")
-	private User user;
-	private transient long createdAtEpoch;
+	public User user;
+	
+	@Column(name="createdAtEpoch")
+	public long createdAtEpoch;
+	
+	@Column(name="url") 
+	public String url;
+	
+	@Column(name="displayUrl") 
+	public String displayUrl;
+	
+	@Column(name="fav") 
+	public boolean favorited;
 	
 	// Make sure to have a default constructor for every ActiveAndroid model
     public Tweet(){
@@ -37,10 +53,21 @@ public class Tweet {
 		Tweet tweet = new Tweet();
 		try {
 			tweet.body = jsonObject.getString("text");
-			tweet.uid = jsonObject.getLong("id");
+			tweet.tid = jsonObject.getLong("id");
 			tweet.createdAt = jsonObject.getString("created_at");
 			tweet.user =User.fromJSON(jsonObject.getJSONObject("user"));
-			tweet.createdAtEpoch = converteTimeToEpoch(tweet.createdAt);
+			tweet.createdAtEpoch = convertTimeToEpoch(tweet.createdAt);
+			tweet.favorited = jsonObject.getBoolean("favorited");
+
+			JSONObject jsonObj = jsonObject.getJSONObject("entities");
+			if (jsonObj != null) {
+				JSONArray jsonArr = jsonObj.getJSONArray("urls");
+				if (jsonArr != null && jsonArr.length() > 0) {
+					tweet.url = jsonArr.getJSONObject(0).getString("url");
+					tweet.displayUrl = jsonArr.getJSONObject(0).getString(
+							"display_url");
+				}
+			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,12 +78,24 @@ public class Tweet {
 		
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public String getDisplayUrl() {
+		return displayUrl;
+	}
+
+	public boolean isFavorited() {
+		return favorited;
+	}
+
 	public String getBody() {
 		return body;
 	}
 
 	public long getUid() {
-		return uid;
+		return tid;
 	}
 
 	public String getCreatedAt() {
@@ -67,7 +106,7 @@ public class Tweet {
 		return user;
 	}
 	
-	public static long converteTimeToEpoch(String time) {
+	public static long convertTimeToEpoch(String time) {
 		SimpleDateFormat sdf  = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
 		Date date;
 		try {
@@ -143,7 +182,7 @@ public class Tweet {
 	
 	@Override
 	public String toString() {
-		return getBody() + "-" + getUser().getScreenName();
+		return getBody() + "-" + getUid() + "-" + getUrl() + "-" + getDisplayUrl();
 	}
 
 }

@@ -1,11 +1,16 @@
 package com.xylon.thetweetzone;
 
+import org.json.JSONObject;
+
 import android.content.Context;
+import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.xylon.thetweetzone.models.User;
 
 /*
  * This is the Android application itself and is used to configure various settings
@@ -36,6 +41,7 @@ public class TwitterClientApp extends com.activeandroid.app.Application {
     public static TwitterClient getRestClient() {
     	return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, TwitterClientApp.context);
     }
+    
     
     @Override
     public void onTerminate() {

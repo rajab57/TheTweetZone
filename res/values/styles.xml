@@ -11,14 +11,16 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:background">@color/twitterBlue</item>
-        <item name="android:buttonStyle">@style/CKButton</item>
+        
+        
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:actionBarStyle">@style/twitterActionBar</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:buttonStyle">@style/CKButton</item>
     </style>
 
     <style name="CKButton" parent="android:style/Widget.Button">
@@ -26,5 +28,9 @@
         <item name="android:layout_margin">0dip</item>
         <item name="android:background">@color/twitterBlue</item>
     </style>
-
+    
+    <style name="twitterActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/twitterBlue</item>
+    </style>
+    
 </resources>

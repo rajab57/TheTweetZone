@@ -3,7 +3,7 @@ package com.xylon.thetweetzone;
 import java.util.List;
 
 import android.content.Context;
-import android.text.Html;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +41,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 		imageLoader.displayImage(tweet.getUser().getProfileImageUrl(), ivProfileImage);
 		tvUserName.setText(tweet.getUser().getScreenName());
 		tvBody.setText(tweet.getBody());
+		Linkify.addLinks(tvBody,Linkify.WEB_URLS);  // Make links active
 		tvTimeAgo.setText(tweet.getCreatedAtFromNow());
 		return v;
 	}

@@ -7,6 +7,11 @@
     <string name="title_activity_photos">Flickr Photos</string>
     <string name="login_label">Connect to Twitter</string>
     <string name="title_activity_timeline">Tweet Zone</string>
-   	<color name="twitterBlue">#4099FF</color>
+
+    <color name="twitterBlue">#00aced</color>
+
+    <string name="title_activity_tweet">Tweet</string>
+    <color name="twitterGray">@android:color/darker_gray</color>
+    <color name="twitterRed">#ffff0000</color>
 
 </resources>

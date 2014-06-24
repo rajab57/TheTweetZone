@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:descendantFocusability="blocksDescendants"
     android:padding="5dp" >
 
     <ImageView
@@ -11,6 +12,7 @@
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:focusable="false"
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -20,9 +22,11 @@
         android:layout_alignParentTop="true"
         android:textStyle="bold"
         android:layout_marginLeft="10dp"
+        android:focusable="false"
         android:layout_toRightOf="@+id/ivProfile"
         android:text="\@foo" />
 
+    <!--    NOTE: android:autoLink="web" breaks the onListItemClick() -->
     <TextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
@@ -30,7 +34,7 @@
         android:layout_below="@+id/tvUserName"
         android:singleLine="false"
         android:layout_alignLeft="@+id/tvUserName"
-        android:autoLink="web"
+        android:focusable="false"
         android:text="This is the tweet Body" />
 
     <TextView
@@ -39,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tvUserName"
         android:layout_alignParentRight="true"
+        android:focusable="false"
         android:text="" />
 
 </RelativeLayout>

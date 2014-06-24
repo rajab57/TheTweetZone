@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:background="@android:color/white" >
+
+    <ImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivProfileImage"
+        android:layout_marginLeft="22dp"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:text="foo"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvName"
+        android:layout_below="@+id/tvName"
+        android:text="\@foo"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/twitterGray" />
+
+    <TextView
+        android:id="@+id/tvBody"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ivProfileImage"
+        android:layout_below="@+id/ivProfileImage"
+        android:layout_marginTop="63dp"
+        android:singleLine="false"
+        android:text="TextView"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    <WebView
+        android:id="@+id/wvImage"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/tvCreatedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvBody"
+        android:layout_below="@+id/wvImage"
+        android:layout_marginTop="30dp"
+        android:text="created at"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/twitterGray" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvCreatedAt"
+        android:layout_marginTop="30dp"
+        android:background="@color/twitterGray" />
+
+    <Button
+        android:id="@+id/btnTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/white"
+        android:text="TWEET"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/twitterBlue" />
+
+    <TextView
+        android:id="@+id/tvTextCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnTweet"
+        android:layout_alignBottom="@+id/btnTweet"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/btnTweet"
+        android:text="140"
+        android:textColor="@color/twitterGray" />
+
+    <EditText
+        android:id="@+id/etTweetText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvTextCount"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>
