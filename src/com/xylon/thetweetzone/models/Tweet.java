@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "Tweet")
@@ -29,7 +30,7 @@ public class Tweet extends Model implements Serializable {
 	@Column(name = "createdAt")
 	public String createdAt;
 	
-	@Column(name = "user")
+	@Column(name = "user",onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
 	public User user;
 	
 	@Column(name="createdAtEpoch")
@@ -214,7 +215,7 @@ public class Tweet extends Model implements Serializable {
 	
 	@Override
 	public String toString() {
-		return getBody() + "-" + getUid() + "-" + getUrl() + "-" + getDisplayUrl();
+		return getBody() + "-" + getUid() + "-" + getUrl() + "-" + getDisplayUrl() + "-" + getUid() ;
 	}
 
 }

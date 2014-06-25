@@ -6,44 +6,112 @@
     android:descendantFocusability="blocksDescendants"
     android:padding="5dp" >
 
+    <TextView
+        android:id="@+id/tvReTweetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/ivProfile"
+        android:focusable="false"
+        android:text=""
+        android:textColor="@color/twitterGray"
+        android:textSize="10sp" />
+
     <ImageView
         android:id="@+id/ivProfile"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
         android:focusable="false"
         android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/tvUserName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lluserinfo"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textStyle="bold"
+        android:layout_below="@+id/tvReTweetName"
         android:layout_marginLeft="10dp"
-        android:focusable="false"
         android:layout_toRightOf="@+id/ivProfile"
-        android:text="\@foo" />
+        android:orientation="horizontal" >
 
-    <!--    NOTE: android:autoLink="web" breaks the onListItemClick() -->
-    <TextView
-        android:id="@+id/tvBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvUserName"
-        android:singleLine="false"
-        android:layout_alignLeft="@+id/tvUserName"
-        android:focusable="false"
-        android:text="This is the tweet Body" />
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:focusable="false"
+            android:text="\@foo"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvOtherText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:focusable="false"
+            android:text=""
+            android:textColor="@color/twitterGray"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- NOTE: android:autoLink="web" breaks the onListItemClick() -->
 
     <TextView
         android:id="@+id/tvTimeAgo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvUserName"
+        android:layout_alignBottom="@+id/lluserinfo"
         android:layout_alignParentRight="true"
         android:focusable="false"
-        android:text="" />
+        android:text=""
+        android:textColor="@color/twitterGray"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tvBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lluserinfo"
+        android:layout_below="@+id/lluserinfo"
+        android:focusable="false"
+        android:singleLine="false"
+        android:text="This is the tweet Body"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:id="@+id/llicons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/ibReply"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+			android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/reply3" />
+
+        <ImageButton
+            android:id="@+id/ibretweet"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="40dp"
+            android:background="@null"
+            android:src="@drawable/retweet3" />
+
+        <ImageButton
+            android:id="@+id/fav"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+			android:layout_marginLeft="40dp"
+			android:background="@null"
+            android:src="@drawable/star3" />
+    </LinearLayout>
 
 </RelativeLayout>

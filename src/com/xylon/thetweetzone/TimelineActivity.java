@@ -45,8 +45,8 @@ public class TimelineActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// MUST request the feature before setting content view
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
-		setContentView(R.layout.activity_timeline);	
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setContentView(R.layout.activity_timeline);
 		getActionBar().setDisplayShowTitleEnabled(false);
 		client = TwitterClientApp.getRestClient();
 		lvTweets = (PullToRefreshListView) findViewById(R.id.lvTweets);
@@ -57,9 +57,7 @@ public class TimelineActivity extends Activity implements
 		getUserAccountInfo();
 		setupListeners();
 	}
-	
-	
-	
+
 	private void setupListeners() {
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
@@ -95,13 +93,14 @@ public class TimelineActivity extends Activity implements
 				}
 			}
 		});
-		
+
 		lvTweets.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long rowId) {
-				Intent i = new Intent(TimelineActivity.this, TweetActivity.class);
+				Intent i = new Intent(TimelineActivity.this,
+						TweetActivity.class);
 				i.putExtra("position", position);
 				Tweet item = (Tweet) parent.getItemAtPosition(position);
 				i.putExtra("tweet", item);
@@ -111,37 +110,37 @@ public class TimelineActivity extends Activity implements
 
 		});
 	}
-	
-    // Should be called manually when an async task has started
+
+	// Should be called manually when an async task has started
 	// Ensure that it is run on the UI thread
-    public void showProgressBar() {
-    	try {  
-            runOnUiThread(new Runnable() {
-             public void run() {
-            	 setProgressBarIndeterminateVisibility(true); 
-                   return;
-                 }
-            });
+	public void showProgressBar() {
+		try {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					setProgressBarIndeterminateVisibility(true);
+					return;
+				}
+			});
 
-         } catch(Exception e) { 
-               e.printStackTrace();
-         } 
-    }
-    
-    // Should be called when an async task has finished
-    public void hideProgressBar() {
-    	try {  
-            runOnUiThread(new Runnable() {
-             public void run() {
-            	 setProgressBarIndeterminateVisibility(false); 
-                   return;
-                 }
-            });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-         } catch(Exception e) { 
-               e.printStackTrace();
-         } 
-    }
+	// Should be called when an async task has finished
+	public void hideProgressBar() {
+		try {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					setProgressBarIndeterminateVisibility(false);
+					return;
+				}
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,7 +167,6 @@ public class TimelineActivity extends Activity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 
 	/**
 	 * Returns a collection of the most recent Tweets and retweets posted by the
@@ -182,16 +180,20 @@ public class TimelineActivity extends Activity implements
 
 		System.out.println("Fetching Tweets");
 		if (NetworkingUtils.isNetworkAvailable(this)) {
-			showProgressBar();  //1
+			showProgressBar(); // 1
 			client.getHomeTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
 
 						@Override
 						public void onSuccess(JSONArray json) {
-							hideProgressBar(); //1
-							aTweets.addAll(Tweet.fromJSONArray(json));
+							hideProgressBar(); // 1
+							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
 							PostTweetsToDBTask dbTask = new PostTweetsToDBTask();
 							dbTask.execute(tweets);
+							for (Tweet tweet : ts) {
+								isReTweet(tweet);
+							}
+							aTweets.addAll(ts);
 							System.out.println("In populateTimeline");
 							if (isRefreshing == true) {
 								lvTweets.onRefreshComplete();
@@ -205,12 +207,13 @@ public class TimelineActivity extends Activity implements
 							Log.d("debug", e.toString());
 							Log.d("debug", s.toString());
 							lvTweets.onRefreshComplete();
-							hideProgressBar(); //1
+							hideProgressBar(); // 1
 
 						}
 					});
 		} else {
-			Toast.makeText(getApplicationContext(), "Network not available",Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Network not available",
+					Toast.LENGTH_SHORT).show();
 			QueryTweetsFromDBTask dbTask = new QueryTweetsFromDBTask();
 			dbTask.execute(sinceId, maxId, 20);
 
@@ -225,7 +228,7 @@ public class TimelineActivity extends Activity implements
 			TwitterDatabaseOperations.batchInsertTweets(tweets);
 			return null;
 		}
-		
+
 		protected void onPostExecute() {
 		}
 
@@ -246,7 +249,7 @@ public class TimelineActivity extends Activity implements
 
 		@Override
 		protected ArrayList<Tweet> doInBackground(Object... params) {
-			showProgressBar();//3
+			showProgressBar();// 3
 			int sinceId = (Integer) params[0];
 			long maxId = (Long) params[1];
 			int count = (Integer) params[2];
@@ -259,7 +262,7 @@ public class TimelineActivity extends Activity implements
 
 		protected void onPostExecute(ArrayList<Tweet> result) {
 			aTweets.addAll(result);
-			hideProgressBar(); //3
+			hideProgressBar(); // 3
 		}
 
 	}
@@ -307,6 +310,52 @@ public class TimelineActivity extends Activity implements
 			public void onSuccess(JSONObject json) {
 				accountInfo = User.fromJSON(json);
 			}
+
+			@Override
+			public void onFailure(Throwable e, String s) {
+				Log.d("debug", "Posting Tweet to Timeline failed");
+				Log.d("debug", s.toString());
+
+			}
+		});
+	}
+
+	public void isReTweet(Tweet tweet) {
+		String body = tweet.getBody();
+		if (body.startsWith("RT")) {
+			int start = body.indexOf("@");
+			int end = body.indexOf(":");
+			String screenName = "";
+			if ((start != -1) && (end != -1))
+				screenName = body.substring(start + 1, end);
+			User user = TwitterDatabaseOperations
+					.getUserWithScreenName(screenName);
+			if (user == null) {
+				getUserFromScreenName(screenName);
+			}
+
+		}
+	}
+	
+	
+	public void getUserFromScreenName(final String sName) {
+		TwitterClient client = TwitterClientApp.getRestClient();
+		System.out.println("Inserting user into db");
+		client.searchUserByScreenName(sName, new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(JSONObject json) {
+				User user = User.fromJSON(json);
+				System.out.println(sName + " :::" + user.getName());
+				// post it to database
+				TwitterDatabaseOperations.insertUser(user);
+			}
+			@Override
+			public void onSuccess(int statusCode, JSONObject json) {
+				User user = User.fromJSON(json);
+				System.out.println(sName + " :::" + user.getName());
+				// post it to database
+				TwitterDatabaseOperations.insertUser(user);
+			};			
 
 			@Override
 			public void onFailure(Throwable e, String s) {

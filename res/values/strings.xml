@@ -11,7 +11,7 @@
     <color name="twitterBlue">#00aced</color>
 
     <string name="title_activity_tweet">Tweet</string>
-    <color name="twitterGray">@android:color/darker_gray</color>
+    <color name="twitterGray">#7D7D7D</color>
     <color name="twitterRed">#ffff0000</color>
 
 </resources>

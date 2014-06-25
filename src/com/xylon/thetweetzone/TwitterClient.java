@@ -66,6 +66,15 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(apiUrl, null, handler);
     }
     
+    public void searchUserByScreenName(String sName, AsyncHttpResponseHandler handler) {
+    	System.out.println(sName);
+    	String apiUrl = getApiUrl("users/show.json");
+    	RequestParams params = new RequestParams();
+    	params.put("screen_name", sName);
+    	params.put("include_entities","false");
+    	client.get(apiUrl,params,handler);
+    }
+    
     /*
     // CHANGE THIS
     // DEFINE METHODS for different API endpoints here

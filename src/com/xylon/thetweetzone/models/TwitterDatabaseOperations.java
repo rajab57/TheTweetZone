@@ -12,9 +12,6 @@ public class TwitterDatabaseOperations {
 		ActiveAndroid.beginTransaction();
 		try {
 		        for (int i = 0; i < tweets.size(); i++) {
-		        	System.out.println("USERINFO " + tweets.get(i).getUser().toString());
-		        	System.out.println("TWEET " + tweets.get(i).toString());
-		            
 		           tweets.get(i).getUser().save();
 		           tweets.get(i).save();
 		        }
@@ -27,6 +24,10 @@ public class TwitterDatabaseOperations {
 	
 	public static void insertTweet(Tweet tweet) {
 		tweet.save();
+	}
+	
+	public static void insertUser(User user) {
+		user.save();
 	}
 	
 	public static List<Tweet> getAllTweets() {
@@ -49,5 +50,19 @@ public class TwitterDatabaseOperations {
 		.where("uid<=" , maxId)
 		.limit(count)
 		.execute();	
+	}
+	
+	public static User getUser(long id) {
+		return  new Select()
+		.from(User.class)
+		.where("uid= ? ", id)
+		.executeSingle();
+	}
+	
+	public static User getUserWithScreenName(String sName) {
+		return  new Select()
+		.from(User.class)
+		.where("screenName= ?", sName)
+		.executeSingle();
 	}
 }

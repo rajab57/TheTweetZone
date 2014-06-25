@@ -23,7 +23,7 @@
         android:layout_marginLeft="22dp"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:text="foo"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <TextView
@@ -131,6 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/tvTextCount"
         android:ems="10"
         android:inputType="textMultiLine"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" >
@@ -141,10 +143,10 @@
     <View
         android:id="@+id/divider2"
         android:layout_width="1dp"
-        android:layout_height="30dp"
+        android:layout_height="25dp"
         android:layout_alignBottom="@+id/etTweetText"
         android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/tvTextCount"
+        android:layout_toLeftOf="@+id/btnTweet"
         android:background="@color/twitterGray" />
 
     <TextView
@@ -154,8 +156,7 @@
         android:layout_alignBaseline="@+id/etTweetText"
         android:layout_alignBottom="@+id/etTweetText"
         android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/etTweetText"
-        android:gravity="left"
+        android:layout_toLeftOf="@+id/divider2"
         android:text="140"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:textColor="@color/twitterGray" />
@@ -166,11 +167,11 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/wvImage"
         android:layout_alignBottom="@+id/tvTextCount"
+        android:layout_alignParentRight="true"
         android:background="@android:color/white"
-        android:gravity="right"
         android:padding="5dp"
         android:text="TWEET"
-        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textSize="14dp"
         android:textColor="@color/twitterBlue" />
 
 </RelativeLayout>
