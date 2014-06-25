@@ -43,6 +43,18 @@ public class Tweet extends Model implements Serializable {
 	
 	@Column(name="fav") 
 	public boolean favorited;
+
+	// do not persist to database
+	public int retweetCount;
+
+	@Column(name="retweeted")
+	public boolean retweeted;
+
+	// do not persist to database
+	public int favCount;
+	
+	@Column(name="inReplyToUserId")
+	public String inReplyToUserId;
 	
 	// Make sure to have a default constructor for every ActiveAndroid model
     public Tweet(){
@@ -58,6 +70,10 @@ public class Tweet extends Model implements Serializable {
 			tweet.user =User.fromJSON(jsonObject.getJSONObject("user"));
 			tweet.createdAtEpoch = convertTimeToEpoch(tweet.createdAt);
 			tweet.favorited = jsonObject.getBoolean("favorited");
+			tweet.retweeted = jsonObject.getBoolean("retweeted");
+			tweet.retweetCount = jsonObject.getInt("retweet_count");
+			tweet.favCount = jsonObject.getInt("favorite_count");
+			tweet.inReplyToUserId = jsonObject.getString("in_reply_to_user_id");
 
 			JSONObject jsonObj = jsonObject.getJSONObject("entities");
 			if (jsonObj != null) {
@@ -76,6 +92,22 @@ public class Tweet extends Model implements Serializable {
 		// Extract values from the json to populate member variables
 		return tweet;
 		
+	}
+
+	public int getFavCount() {
+		return favCount;
+	}
+
+	public int getRetweetCount() {
+		return retweetCount;
+	}
+
+	public boolean isRetweeted() {
+		return retweeted;
+	}
+
+	public String getInReplyToUserId() {
+		return inReplyToUserId;
 	}
 
 	public String getUrl() {

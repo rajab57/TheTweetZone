@@ -14,12 +14,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.ComposeTweetDialogFragment.PostToTimelineListener;
+import com.xylon.thetweetzone.adapters.TweetArrayAdapter;
 import com.xylon.thetweetzone.helpers.EndlessScrollListener;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.Tweet;
@@ -42,15 +44,23 @@ public class TimelineActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_timeline);
+		// MUST request the feature before setting content view
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
+		setContentView(R.layout.activity_timeline);	
+		getActionBar().setDisplayShowTitleEnabled(false);
 		client = TwitterClientApp.getRestClient();
 		lvTweets = (PullToRefreshListView) findViewById(R.id.lvTweets);
 		tweets = new ArrayList<Tweet>();
 		aTweets = new TweetArrayAdapter(this, tweets);
-		System.out.println("XXXX");
 		populateTimeline(1, -1);
 		lvTweets.setAdapter(aTweets);
 		getUserAccountInfo();
+		setupListeners();
+	}
+	
+	
+	
+	private void setupListeners() {
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
@@ -101,6 +111,37 @@ public class TimelineActivity extends Activity implements
 
 		});
 	}
+	
+    // Should be called manually when an async task has started
+	// Ensure that it is run on the UI thread
+    public void showProgressBar() {
+    	try {  
+            runOnUiThread(new Runnable() {
+             public void run() {
+            	 setProgressBarIndeterminateVisibility(true); 
+                   return;
+                 }
+            });
+
+         } catch(Exception e) { 
+               e.printStackTrace();
+         } 
+    }
+    
+    // Should be called when an async task has finished
+    public void hideProgressBar() {
+    	try {  
+            runOnUiThread(new Runnable() {
+             public void run() {
+            	 setProgressBarIndeterminateVisibility(false); 
+                   return;
+                 }
+            });
+
+         } catch(Exception e) { 
+               e.printStackTrace();
+         } 
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,11 +182,13 @@ public class TimelineActivity extends Activity implements
 
 		System.out.println("Fetching Tweets");
 		if (NetworkingUtils.isNetworkAvailable(this)) {
+			showProgressBar();  //1
 			client.getHomeTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
 
 						@Override
 						public void onSuccess(JSONArray json) {
+							hideProgressBar(); //1
 							aTweets.addAll(Tweet.fromJSONArray(json));
 							PostTweetsToDBTask dbTask = new PostTweetsToDBTask();
 							dbTask.execute(tweets);
@@ -162,6 +205,7 @@ public class TimelineActivity extends Activity implements
 							Log.d("debug", e.toString());
 							Log.d("debug", s.toString());
 							lvTweets.onRefreshComplete();
+							hideProgressBar(); //1
 
 						}
 					});
@@ -181,6 +225,9 @@ public class TimelineActivity extends Activity implements
 			TwitterDatabaseOperations.batchInsertTweets(tweets);
 			return null;
 		}
+		
+		protected void onPostExecute() {
+		}
 
 	}
 
@@ -199,6 +246,7 @@ public class TimelineActivity extends Activity implements
 
 		@Override
 		protected ArrayList<Tweet> doInBackground(Object... params) {
+			showProgressBar();//3
 			int sinceId = (Integer) params[0];
 			long maxId = (Long) params[1];
 			int count = (Integer) params[2];
@@ -211,6 +259,7 @@ public class TimelineActivity extends Activity implements
 
 		protected void onPostExecute(ArrayList<Tweet> result) {
 			aTweets.addAll(result);
+			hideProgressBar(); //3
 		}
 
 	}
@@ -223,10 +272,12 @@ public class TimelineActivity extends Activity implements
 	 */
 	@Override
 	public void onPostToTimeline(String s) {
+		showProgressBar(); // 4
 		client.postStatusUpdate(s, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
 				Log.d("DEBUG", "Successfully posted to Twitter");
+
 				populateTimeline(1, -1);
 			}
 

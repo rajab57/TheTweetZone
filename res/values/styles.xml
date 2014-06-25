@@ -29,8 +29,22 @@
         <item name="android:background">@color/twitterBlue</item>
     </style>
     
-    <style name="twitterActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+ <!--    <style name="twitterActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@color/twitterBlue</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style> -->
+    
+        <!-- ActionBar styles -->
+    <style name="twitterActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/twitterBlue</item>
+        <item name="android:titleTextStyle">@style/twitterActionBarTextStyle</item>
     </style>
+
+    <!-- ActionBar title text -->
+    <style name="twitterActionBarTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+
     
 </resources>

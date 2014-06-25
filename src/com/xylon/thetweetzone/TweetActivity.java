@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.xylon.thetweetzone.helpers.CommonUtils;
 import com.xylon.thetweetzone.models.Tweet;
 
 public class TweetActivity extends Activity {
@@ -40,10 +42,10 @@ public class TweetActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("here");
 		setContentView(R.layout.activity_tweet);
-
+		
 		tweet = (Tweet) getIntent().getSerializableExtra("tweet");
+		System.out.println(tweet.toString());
 		twitterGrey = getResources().getColor(R.color.twitterGray);
 		twitterBlue = getResources().getColor(R.color.twitterBlue);
 		twitterRed = getResources().getColor(R.color.twitterRed);
@@ -76,25 +78,34 @@ public class TweetActivity extends Activity {
 		TextView tvBody = (TextView) findViewById(R.id.tvBody);
 		TextView tvScreenName = (TextView) findViewById(R.id.tvScreenName);
 		TextView tvCreatedAt = (TextView) findViewById(R.id.tvCreatedAt);
+		TextView tvRetweetCount = (TextView)findViewById(R.id.tvRetweetCount);
+		TextView tvFavCount = (TextView)findViewById(R.id.tvFavCount);
 		tvTextCount = (TextView) findViewById(R.id.tvTextCount);
 		etTweetText = (EditText) findViewById(R.id.etTweetText);
 		btnTweet = (Button) findViewById(R.id.btnTweet);
 		WebView wvImage = (WebView)findViewById(R.id.wvImage);
+		
 		// populate view with tweet data
 		ivProfileImage.setImageResource(android.R.color.transparent);
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		imageLoader.displayImage(tweet.getUser().getProfileImageUrl(),
 				ivProfileImage);
 		tvName.setText(tweet.getUser().getName());
-		tvScreenName.setText(tweet.getUser().getScreenName());
+		tvScreenName.setText("@" + tweet.getUser().getScreenName());
 		tvBody.setText(tweet.getBody());
-//		SimpleDateFormat formatTime = new SimpleDateFormat("h:mm a", Locale.US);
-//		String strTime = formatTime.format(tweet.getCreatedAt());
+		Linkify.addLinks(tvBody,Linkify.WEB_URLS);  // Make links active
+		tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
+		tvFavCount.setText(String.valueOf(tweet.getFavCount()) );
+		//Tue Aug 28 19:59:34 +0000 2012
+		String strTime = CommonUtils.convertDateFormat(tweet.getCreatedAt(),"EEE MMM d HH:mm:ss Z yyyy","h:mm a" );
+		String strDate = CommonUtils.convertDateFormat(tweet.getCreatedAt(),"EEE MMM d HH:mm:ss Z yyyy","dd MMM yy" );
+		//SimpleDateFormat formatTime = new SimpleDateFormat("h:mm a", Locale.US);
+		//String strTime = formatTime.format(tweet.getCreatedAt());
 //		SimpleDateFormat formatDate = new SimpleDateFormat("dd MMM yy",
 //				Locale.US);
 //		String strDate = formatDate.format(tweet.getCreatedAt());
-//		tvCreatedAt.setText(strTime + " ¥ " + strDate);
-		tvCreatedAt.setText(tweet.getCreatedAt());
+		tvCreatedAt.setText(strTime + " ¥ " + strDate);
+		//tvCreatedAt.setText(tweet.getCreatedAt());
 		initialStr = "Reply to " + tweet.getUser().getScreenName();
 		etTweetText.setText(initialStr);
 		etTweetText.setTextColor(twitterGrey);
