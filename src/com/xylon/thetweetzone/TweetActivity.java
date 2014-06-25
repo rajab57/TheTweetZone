@@ -45,7 +45,6 @@ public class TweetActivity extends Activity {
 		setContentView(R.layout.activity_tweet);
 		
 		tweet = (Tweet) getIntent().getSerializableExtra("tweet");
-		System.out.println(tweet.toString());
 		twitterGrey = getResources().getColor(R.color.twitterGray);
 		twitterBlue = getResources().getColor(R.color.twitterBlue);
 		twitterRed = getResources().getColor(R.color.twitterRed);
@@ -99,13 +98,7 @@ public class TweetActivity extends Activity {
 		//Tue Aug 28 19:59:34 +0000 2012
 		String strTime = CommonUtils.convertDateFormat(tweet.getCreatedAt(),"EEE MMM d HH:mm:ss Z yyyy","h:mm a" );
 		String strDate = CommonUtils.convertDateFormat(tweet.getCreatedAt(),"EEE MMM d HH:mm:ss Z yyyy","dd MMM yy" );
-		//SimpleDateFormat formatTime = new SimpleDateFormat("h:mm a", Locale.US);
-		//String strTime = formatTime.format(tweet.getCreatedAt());
-//		SimpleDateFormat formatDate = new SimpleDateFormat("dd MMM yy",
-//				Locale.US);
-//		String strDate = formatDate.format(tweet.getCreatedAt());
 		tvCreatedAt.setText(strTime + " ¥ " + strDate);
-		//tvCreatedAt.setText(tweet.getCreatedAt());
 		initialStr = "Reply to " + tweet.getUser().getScreenName();
 		etTweetText.setText(initialStr);
 		etTweetText.setTextColor(twitterGrey);
@@ -147,7 +140,6 @@ public class TweetActivity extends Activity {
 					int count) {
 				
 				int numChar = s.length();
-				System.out.println( "Num char " + numChar );
 				int leftCount = MAX_COUNT - numChar;
 				customizeTextCountAppearance(numChar, leftCount);
 				if (numChar > 0 && numChar <= MAX_COUNT && !btnTweet.isEnabled()) {

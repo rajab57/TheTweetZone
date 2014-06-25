@@ -101,6 +101,7 @@ public class TimelineActivity extends Activity implements
 					int position, long rowId) {
 				Intent i = new Intent(TimelineActivity.this,
 						TweetActivity.class);
+				++position;  // picks the previous item, probably starts at 0 instead of 1
 				i.putExtra("position", position);
 				Tweet item = (Tweet) parent.getItemAtPosition(position);
 				i.putExtra("tweet", item);
@@ -178,7 +179,6 @@ public class TimelineActivity extends Activity implements
 	 */
 	public void populateTimeline(int sinceId, long maxId) {
 
-		System.out.println("Fetching Tweets");
 		if (NetworkingUtils.isNetworkAvailable(this)) {
 			showProgressBar(); // 1
 			client.getHomeTimeline(sinceId, maxId,
@@ -194,7 +194,6 @@ public class TimelineActivity extends Activity implements
 								isReTweet(tweet);
 							}
 							aTweets.addAll(ts);
-							System.out.println("In populateTimeline");
 							if (isRefreshing == true) {
 								lvTweets.onRefreshComplete();
 								lvTweets.setSelection(0);
@@ -340,19 +339,16 @@ public class TimelineActivity extends Activity implements
 	
 	public void getUserFromScreenName(final String sName) {
 		TwitterClient client = TwitterClientApp.getRestClient();
-		System.out.println("Inserting user into db");
 		client.searchUserByScreenName(sName, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
 				User user = User.fromJSON(json);
-				System.out.println(sName + " :::" + user.getName());
 				// post it to database
 				TwitterDatabaseOperations.insertUser(user);
 			}
 			@Override
 			public void onSuccess(int statusCode, JSONObject json) {
 				User user = User.fromJSON(json);
-				System.out.println(sName + " :::" + user.getName());
 				// post it to database
 				TwitterDatabaseOperations.insertUser(user);
 			};			
