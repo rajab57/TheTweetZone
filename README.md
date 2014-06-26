@@ -11,7 +11,7 @@ Total Hours = 13 hours spent in total
  * [x] User can view more tweets as they scroll with infinite pagination
  * [x] **Optional**: Links in tweets are clickable and will launch the web browser
 4. [x] User can compose a new tweet
- * [x] User can click a ÒComposeÓ icon in the Action Bar on the top right
+ * [x] User can click a ï¿½Composeï¿½ icon in the Action Bar on the top right
  * [x] User can then enter a new tweet and post this to twitter
  * [x] User is taken back to home timeline with new tweet visible in timeline
  * [x] **Optional**: User can see a counter with total number of characters left for tweet
@@ -31,7 +31,7 @@ Total Hours = 13 hours spent in total
 ### Walk through of all user stories:
 
 
-![Video Walkthrough]()
+![Video Walkthrough] https://www.dropbox.com/s/vytpnyc9u7pl9zy/tweetzone.mp4
 
 ### Libraries and Dependencies 
 1. scribe-java - Simple OAuth library for handling the authentication flow.
