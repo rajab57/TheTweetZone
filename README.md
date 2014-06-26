@@ -28,6 +28,12 @@ Total Hours = 13 hours spent in total
 15. [x] **Additional** : Captured number of retweets and favorites on the detailed Tweet View.
 16. [x] **Additional** : Show indefinite progress while fetching tweets from TwitterServer/local database.
 
+
+#### Incomplete
+1. The reply, favorite and retweet buttons on the timeline do not have action attached to it.
+2. Replying to a tweet on a detail tweet screen does not show up on the screen.
+3. Replied to a tweet are not shown on the detail tweet screen.
+
 ### Walk through of all user stories:
 
 
