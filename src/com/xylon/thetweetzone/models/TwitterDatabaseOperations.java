@@ -36,18 +36,24 @@ public class TwitterDatabaseOperations {
 	        .execute();
 	}
 	
-	public static List<Tweet> getTweetsNewerThan(int sinceId, int count) {
+	
+	public static List<Tweet> getTweetsNewerThan(long sinceId, int count) {
+		Long start = (long) sinceId;
+		System.out.println("NNNN " + start);
 		return new Select()
 		.from(Tweet.class)
-		.where("uid>=" , sinceId)
+		.where("tid> ?" , start)
+		.orderBy("tid DESC")
 		.limit(count)
 		.execute();	
 	}
 	
 	public static List<Tweet> getTweetsOlderThan(long maxId, int count) {
+		System.out.println("OOOOO " + maxId);
 		return new Select()
 		.from(Tweet.class)
-		.where("uid<=" , maxId)
+		.where("tid< ?" , maxId)
+		.orderBy("tid DESC")
 		.limit(count)
 		.execute();	
 	}
@@ -56,6 +62,7 @@ public class TwitterDatabaseOperations {
 		return  new Select()
 		.from(User.class)
 		.where("uid= ? ", id)
+		.orderBy("uid DESC")
 		.executeSingle();
 	}
 	

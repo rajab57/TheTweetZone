@@ -127,7 +127,7 @@ public class Tweet extends Model implements Serializable {
 		return body;
 	}
 
-	public long getUid() {
+	public long getTid() {
 		return tid;
 	}
 
@@ -215,7 +215,7 @@ public class Tweet extends Model implements Serializable {
 	
 	@Override
 	public String toString() {
-		return getBody() + "-" + getUid() + "-" + getUrl() + "-" + getDisplayUrl() + "-" + getUid() ;
+		return getBody() + "-" + getTid() + "-" + getUrl() + "-" + getDisplayUrl() + "-" + getTid() ;
 	}
 
 }

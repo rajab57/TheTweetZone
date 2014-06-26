@@ -1,6 +1,7 @@
 package com.xylon.thetweetzone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +25,7 @@ import com.xylon.thetweetzone.ComposeTweetDialogFragment.PostToTimelineListener;
 import com.xylon.thetweetzone.adapters.TweetArrayAdapter;
 import com.xylon.thetweetzone.helpers.EndlessScrollListener;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
+import com.xylon.thetweetzone.helpers.TwitterFetch;
 import com.xylon.thetweetzone.models.Tweet;
 import com.xylon.thetweetzone.models.TwitterDatabaseOperations;
 import com.xylon.thetweetzone.models.User;
@@ -32,14 +34,16 @@ import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public class TimelineActivity extends Activity implements
-		PostToTimelineListener {
+		PostToTimelineListener, TwitterFetch {
 	private TwitterClient client;
 	private ArrayList<Tweet> tweets;
 	private TweetArrayAdapter aTweets;
 	private PullToRefreshListView lvTweets;
-	private boolean isRefreshing = true;
+	private boolean isRefreshing = false;
+	private boolean onScroll = false;
 	private User accountInfo;
 	private static int REQUEST_CODE = 20;
+		
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +56,16 @@ public class TimelineActivity extends Activity implements
 		lvTweets = (PullToRefreshListView) findViewById(R.id.lvTweets);
 		tweets = new ArrayList<Tweet>();
 		aTweets = new TweetArrayAdapter(this, tweets);
-		populateTimeline(1, -1);
+		System.out.println("onCreate call");
+		//populateTimeline(1, -1); // OnScroll called onCreate
 		lvTweets.setAdapter(aTweets);
 		getUserAccountInfo();
 		setupListeners();
 	}
 
 	private void setupListeners() {
+		
+		// ** ONSCROLL
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
@@ -67,16 +74,22 @@ public class TimelineActivity extends Activity implements
 				// AdapterView
 				long maxId = -1;
 				int sinceId = -1;
+
 				if (aTweets.isEmpty()) {
 					sinceId = 1;
 				} else {
-					maxId = tweets.get(aTweets.getCount() - 1).getUid();
+					if (!isRefreshing) {
+						maxId = tweets.get(aTweets.getCount() - 1).getTid();
+
+					}
 				}
+				System.out.println("OnScroll call");
 				populateTimeline(sinceId, maxId);
 
 			}
 		});
 
+		// ** REFRESH
 		// Set a listener to be invoked when the list should be refreshed.
 		lvTweets.setOnRefreshListener(new OnRefreshListener() {
 			@Override
@@ -86,14 +99,17 @@ public class TimelineActivity extends Activity implements
 				// once the loading is done. This can be done from here or any
 				// place such as when the network request has completed
 				// successfully.
+				System.out.println("OnRefresh call");
 				if (!tweets.isEmpty()) {
 					// long sinceId = tweets.get(0).getUid();
-					populateTimeline(1, -1);
+					System.out.println("On refreshing");
+					populateTimelineFromTwitter(tweets.get(0).getTid(), -1);  // fetch fresh tweets from the Twitter server
 					isRefreshing = true;
 				}
 			}
 		});
 
+		// ** ONITEMCLICK
 		lvTweets.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -142,6 +158,20 @@ public class TimelineActivity extends Activity implements
 			e.printStackTrace();
 		}
 	}
+	
+	public void makeToast(final String msg) {
+		try {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					Toast.makeText(TimelineActivity.this, msg, Toast.LENGTH_SHORT).show();
+					return;
+				}
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,10 +207,15 @@ public class TimelineActivity extends Activity implements
 	 * @param sinceId
 	 * @param maxId
 	 */
-	public void populateTimeline(int sinceId, long maxId) {
+	public void populateTimelineFromTwitter(long sinceId, long maxId) {
+		
+		long mSinceId;
 
+		System.out.println("Twitter call for " + sinceId + ":" + maxId + ": " + tweets.size()) ;
 		if (NetworkingUtils.isNetworkAvailable(this)) {
 			showProgressBar(); // 1
+			mSinceId = sinceId;
+			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
 			client.getHomeTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
 
@@ -188,13 +223,27 @@ public class TimelineActivity extends Activity implements
 						public void onSuccess(JSONArray json) {
 							hideProgressBar(); // 1
 							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
+							makeToast("Fetched tweets from Twitter server");
 							PostTweetsToDBTask dbTask = new PostTweetsToDBTask();
 							dbTask.execute(tweets);
 							for (Tweet tweet : ts) {
 								isReTweet(tweet);
 							}
-							aTweets.addAll(ts);
+							
+							if ( !isRefreshing || aTweets.isEmpty())
+								aTweets.addAll(ts);
+							else {
+								Collections.reverse(ts);
+								long start = tweets.get(0).getTid();
+								for(Tweet tweet : ts) {
+									if ( tweet.getTid() == start) {
+										continue;
+									}
+									aTweets.insert(tweet, 0);
+								}
+							}
 							if (isRefreshing == true) {
+								System.out.println("Refreshing is done");
 								lvTweets.onRefreshComplete();
 								lvTweets.setSelection(0);
 								isRefreshing = false;
@@ -213,12 +262,18 @@ public class TimelineActivity extends Activity implements
 		} else {
 			Toast.makeText(getApplicationContext(), "Network not available",
 					Toast.LENGTH_SHORT).show();
-			QueryTweetsFromDBTask dbTask = new QueryTweetsFromDBTask();
-			dbTask.execute(sinceId, maxId, 20);
-
 		}
 	}
 
+
+	private void populateTimeline(long sinceId, long maxId) {
+		// check DB
+		
+		QueryTweetsFromDBTask dbTask = new QueryTweetsFromDBTask();
+		dbTask.execute(sinceId, maxId, 20, this);
+		// Check DB 
+		// if not available, fetch from twitter if network avaialble ( done in postExecute of dbTask )	
+	}
 	private class PostTweetsToDBTask extends
 			AsyncTask<ArrayList<Tweet>, Void, Void> {
 
@@ -246,21 +301,38 @@ public class TimelineActivity extends Activity implements
 	private class QueryTweetsFromDBTask extends
 			AsyncTask<Object, Void, ArrayList<Tweet>> {
 
+		private TwitterFetch fetchTwitter;
+		long sinceId;
+	    long maxId;
+		
 		@Override
 		protected ArrayList<Tweet> doInBackground(Object... params) {
 			showProgressBar();// 3
-			int sinceId = (Integer) params[0];
-			long maxId = (Long) params[1];
+			sinceId = (Long) params[0];
+			maxId = (Long) params[1];
 			int count = (Integer) params[2];
-			if (sinceId == -1)
-				TwitterDatabaseOperations.getTweetsOlderThan(maxId, count);
-			else
-				TwitterDatabaseOperations.getTweetsNewerThan(sinceId, count);
-			return tweets;
+			fetchTwitter = (TwitterFetch) params[3];
+			ArrayList<Tweet> ts = new ArrayList<Tweet>();
+			if (sinceId == -1) {
+				System.out.println("db call for " + sinceId + ":" + maxId  +":" + tweets.get(0).getTid() + ": " + tweets.size());
+				ts = (ArrayList<Tweet>) TwitterDatabaseOperations.getTweetsOlderThan(maxId, count);
+			}
+			else {
+				ts = (ArrayList<Tweet>) TwitterDatabaseOperations.getTweetsNewerThan(sinceId, count);
+			}
+			return ts;
 		}
 
 		protected void onPostExecute(ArrayList<Tweet> result) {
-			aTweets.addAll(result);
+			if ( result == null || result.isEmpty()) {
+				makeToast("No requested data in the Database");
+				// fetch from Twitter
+				fetchTwitter.fetchTwitterCallback(sinceId, maxId);
+			} else {
+				makeToast("Data fetched from the Database ");
+				aTweets.addAll(result);
+				System.out.println("from db Tweets size " + tweets.size());
+			}
 			hideProgressBar(); // 3
 		}
 
@@ -278,14 +350,11 @@ public class TimelineActivity extends Activity implements
 		client.postStatusUpdate(s, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
-				Log.d("DEBUG", "Successfully posted to Twitter");
-
 				populateTimeline(1, -1);
 			}
 
 			@Override
 			public void onSuccess(int statusCode, JSONObject response) {
-				Log.d("DEBUG", "Successfully posted to Twitter 2");
 				tweets.clear();
 				// populateTimeline(1, -1); // there is delay in updates
 				Tweet tweet = Tweet.fromJSON(response);
@@ -360,6 +429,12 @@ public class TimelineActivity extends Activity implements
 
 			}
 		});
+	}
+
+	@Override
+	public void fetchTwitterCallback(long sinceId, long maxId) {
+		populateTimelineFromTwitter(sinceId,maxId);
+		
 	}
 
 }
