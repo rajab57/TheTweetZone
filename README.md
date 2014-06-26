@@ -36,7 +36,7 @@ Total Hours = 13 hours spent in total
 
 ### Walk through of all user stories:
 
-[![Video Walkthrough](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](http://youtu.be/vt5fpE0bzSY)
+[![Video Walkthrough](https://raw.github.com/rajab57/TheTweetZone/assets/HomeScreen.png)](https://www.dropbox.com/s/vytpnyc9u7pl9zy/tweetzone.mp4)
 ![Video Walkthrough] https://www.dropbox.com/s/vytpnyc9u7pl9zy/tweetzone.mp4
 
 ### Libraries and Dependencies 
