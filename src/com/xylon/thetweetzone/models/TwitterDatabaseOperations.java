@@ -39,7 +39,6 @@ public class TwitterDatabaseOperations {
 	
 	public static List<Tweet> getTweetsNewerThan(long sinceId, int count) {
 		Long start = (long) sinceId;
-		System.out.println("NNNN " + start);
 		return new Select()
 		.from(Tweet.class)
 		.where("tid> ?" , start)
@@ -49,7 +48,6 @@ public class TwitterDatabaseOperations {
 	}
 	
 	public static List<Tweet> getTweetsOlderThan(long maxId, int count) {
-		System.out.println("OOOOO " + maxId);
 		return new Select()
 		.from(Tweet.class)
 		.where("tid< ?" , maxId)

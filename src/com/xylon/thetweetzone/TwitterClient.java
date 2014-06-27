@@ -152,6 +152,13 @@ public class TwitterClient extends OAuthBaseClient {
     	
     }
     
+    /**
+     * Favorites the status specified in the ID parameter as the authenticating user. 
+     * Returns the favorite status when successful.
+     * A 200 OK response from this method will indicate whether the intended action was successful or not.
+     * @param tweetId
+     * @param handler
+     */
 	public void favoriteTweet(long tweetId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/create.json");
 		RequestParams params = new RequestParams();
@@ -161,6 +168,12 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, handler);
 	}
 
+	/**
+	 * Un-favorites the status specified in the ID parameter as the authenticating user. 
+	 * Returns the un-favorited status in the requested format when successful.
+	 * @param tweetId
+	 * @param handler
+	 */
 	public void unFavoriteTweet(long tweetId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/destroy.json");
 		RequestParams params = new RequestParams();
