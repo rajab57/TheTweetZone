@@ -23,6 +23,9 @@ public class User extends Model implements Serializable {
 	
 	@Column(name="profileImageUrl")
 	public String profileImageUrl;
+	
+	@Column(name="followersCount")
+	public int followersCount;
 
 	public User() {
 		super();
@@ -35,6 +38,7 @@ public class User extends Model implements Serializable {
 			u.uid = jsonObject.getLong("id");
 			u.screenName = jsonObject.getString("screen_name");
 			u.profileImageUrl = jsonObject.getString("profile_image_url");
+			u.followersCount = jsonObject.getInt("followers_count");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
