@@ -27,7 +27,9 @@ Total Hours = 13 hours spent in total
 14. [x] **Additional** : Parsing the tweet body to be similar to Twitter
 15. [x] **Additional** : Captured number of retweets and favorites on the detailed Tweet View.
 16. [x] **Additional** : Show indefinite progress while fetching tweets from TwitterServer/local database.
-
+17. [x] **Additional** : Parse the tweet to extract the retweet information and show on the Tweet accordingly.
+18. [x] **Additional** : Get original user info from Twitter server for retweeted tweets and update Tweet timeline.
+19. [x] **Additional** : Tweet text count color change based on allowed limit
 
 #### Incomplete
 1. The reply, favorite and retweet buttons on the timeline do not have action attached to it.
@@ -36,7 +38,6 @@ Total Hours = 13 hours spent in total
 
 ### Walk through of all user stories:
 
-[![Video Walkthrough](https://raw.github.com/rajab57/TheTweetZone/assets/HomeScreen.png)](https://www.dropbox.com/s/vytpnyc9u7pl9zy/tweetzone.mp4)
 ![Video Walkthrough] https://www.dropbox.com/s/vytpnyc9u7pl9zy/tweetzone.mp4
 
 ### Libraries and Dependencies 
