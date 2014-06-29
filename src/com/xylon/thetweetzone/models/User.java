@@ -26,6 +26,12 @@ public class User extends Model implements Serializable {
 	
 	@Column(name="followersCount")
 	public int followersCount;
+	
+	@Column(name="tweetsCount")
+	public int tweetsCount;
+	
+	@Column(name="followingCount")
+	public int followingCount;
 
 	public User() {
 		super();
@@ -39,6 +45,8 @@ public class User extends Model implements Serializable {
 			u.screenName = jsonObject.getString("screen_name");
 			u.profileImageUrl = jsonObject.getString("profile_image_url");
 			u.followersCount = jsonObject.getInt("followers_count");
+			u.tweetsCount = jsonObject.getInt("statuses_count");
+			u.followingCount = jsonObject.getInt("friends_count");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,6 +56,12 @@ public class User extends Model implements Serializable {
 		return u;
 	}
 
+	public int getTweetsCount() {
+		return tweetsCount;
+	}
+	public int getFollowingCount() {
+		return followingCount;
+	}
 	public String getName() {
 		return name;
 	}
@@ -72,6 +86,9 @@ public class User extends Model implements Serializable {
 		sb.append(profileImageUrl + ":");
 		return sb.toString();
 		
+	}
+	public int getFollowersCount() {
+		return followersCount;
 	}
 	
 //	 // Used to return items from another table based on the foreign key

@@ -19,8 +19,17 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:actionBarStyle">@style/twitterActionBar</item>
+        <item name="android:actionBarTabBarStyle">@style/twitterActionBarTabBarStyle</item>  
+        <item name="android:actionBarTabTextStyle">@style/twitterActionBarTabTextStyle</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:buttonStyle">@style/CKButton</item>
+    </style>
+    
+    <style name="TimelineActivityStyle" parent="AppBaseTheme">
+        <item name="android:actionBarStyle">@style/twitterActionBar</item>
+        <item name="android:actionBarTabBarStyle">@style/twitterActionBarTabBarStyle</item>
+        <item name="android:actionBarTabStyle">@style/twitterActionBarTab</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="CKButton" parent="android:style/Widget.Button">
@@ -28,22 +37,37 @@
         <item name="android:layout_margin">0dip</item>
         <item name="android:background">@color/twitterBlue</item>
     </style>
-    
- <!--    <style name="twitterActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/twitterBlue</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style> -->
-    
+        
         <!-- ActionBar styles -->
     <style name="twitterActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@color/twitterBlue</item>
         <item name="android:titleTextStyle">@style/twitterActionBarTextStyle</item>
     </style>
+    
+    <!--  ActionBarTab style -->
+    <style name="twitterActionBarTab" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:titleTextStyle">@style/twitterActionBarTabTextStyle</item>
+    </style>
 
     <!-- ActionBar title text -->
-    <style name="twitterActionBarTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="twitterActionBarTextStyle" parent="@android:style/Widget.Holo.ActionBar.TabText">
         <item name="android:textColor">@android:color/white</item>
     </style>
+    
+    <!--  ActionBar Tab text color -->
+    <style name="twitterActionBarTabTextStyle" parent="@android:style/Widget.Holo.ActionBar.TabText">
+        <item name="android:textColor">@color/twitterBlue</item>
+    </style>
+    
+        <!--  ActionBar TabBar background color -->
+    <style name="twitterActionBarTabBarStyle" parent="@android:style/Widget.Holo.ActionBar.TabBar">
+        <item name="android:background">@android:color/white</item>
+    </style>
+    
+    <!--  hide ActionBar title  -->
+    <style name="HideActionBarTitleStyle" parent="@android:style/Widget.Holo.ActionBar">
+     <item name="android:displayOptions">useLogo|showHome</item>
+</style>
     
 
     

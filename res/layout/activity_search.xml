@@ -8,10 +8,10 @@
         android:id="@+id/flContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentTop="true" >
     </FrameLayout>
 
 </RelativeLayout>

@@ -4,8 +4,9 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -19,24 +20,19 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
-import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.api.TwitterClient;
-import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
-import com.xylon.thetweetzone.fragments.HomeTimelineFragment;
 import com.xylon.thetweetzone.fragments.MentionsTimelineFragement;
 import com.xylon.thetweetzone.fragments.SearchFragment;
 import com.xylon.thetweetzone.listeners.FragmentTabListener;
 import com.xylon.thetweetzone.models.User;
 
-public class TimelineActivity extends FragmentActivity implements OnQueryTextListener {
+public class SearchActivity extends FragmentActivity implements OnQueryTextListener {
 
-	private static String TAG = TimelineActivity.class.getSimpleName();
-	private HomeTimelineFragment homeFragment;
-	private MentionsTimelineFragement mentionsFragment;
+	private static String TAG = SearchActivity.class.getSimpleName();
+
 	TwitterClient client;
-	private User accountInfo;
-	private static int REQUEST_CODE = 20;
 	private SearchView searchView;
+	private SharedPreferences prefs;  // shared preferences 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +40,29 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 		Log.d(TAG, "onCreate");
 		// MUST request the feature before setting content view
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.activity_timeline);
+		setContentView(R.layout.activity_search);
 		getActionBar().setDisplayShowTitleEnabled(false);
-//		mentionsFragment = (MentionsTimelineFragement) getSupportFragmentManager()
-//				.findFragmentById(R.id.fragTweets);
-		client = TwitterClientApp.getRestClient();
-		getUserAccountInfo();
+		
+		// Get from SearchAction Bar
+		Intent intent = getIntent();
+	    String query = intent.getStringExtra("query");
+		
+	    // Write to SharedPreferences
+	    writeQueryToSharedPref(query);
+		
 		setupTabs();
 	}
 
+	public interface SearchQueryListener {
+	    void search();
+	}
+	
+	private void writeQueryToSharedPref(String queryStr) {
+		prefs = getSharedPreferences("query", Context.MODE_PRIVATE); 
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("query",queryStr );  //or you can use putInt, putBoolean ... 
+		editor.commit();
+	}
 	private void setupTabs() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -60,26 +70,24 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 
 		Tab tab1 = actionBar
 				.newTab()
-				.setText("Home")
-				.setIcon(R.drawable.ic_home)
-				.setTag("HomeTimelineFragment")
+				.setText("Top Tweets")
+				.setTag("TopTweetsFragment")
 				.setTabListener(
-						new FragmentTabListener<HomeTimelineFragment>(
+						new FragmentTabListener<SearchFragment>(
 								R.id.flContainer, this, "first",
-								HomeTimelineFragment.class));
+								SearchFragment.class));
 
 		actionBar.addTab(tab1);
 		actionBar.selectTab(tab1);
 
 		Tab tab2 = actionBar
 				.newTab()
-				.setText("mentions")
-				.setIcon(R.drawable.ic_mentions)
-				.setTag("MentionsTimelineFragment")
+				.setText("All Tweets")
+				.setTag("AllTweetsFragment")
 				.setTabListener(
-						new FragmentTabListener<MentionsTimelineFragement>(
+						new FragmentTabListener<SearchFragment>(
 								R.id.flContainer, this, "second",
-								MentionsTimelineFragement.class));
+								SearchFragment.class));
 
 		actionBar.addTab(tab2);
 	}
@@ -103,7 +111,7 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 		try {
 			runOnUiThread(new Runnable() {
 				public void run() {
-					Toast.makeText(TimelineActivity.this, msg,
+					Toast.makeText(SearchActivity.this, msg,
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -131,19 +139,6 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-
-		if (id == R.id.action_compose) {
-			DialogFragment dialogFragment = new ComposeTweetDialogFragment();
-			Bundle args = new Bundle();
-			args.putSerializable("user", accountInfo);
-			dialogFragment.setArguments(args);
-			dialogFragment.show(getFragmentManager(), "composeTweet");
-			return true;
-		} 
-//		else if ( id == R.id.action_profile) {
-//			onProfileView();
-//			
-//		}
 		
 		return super.onOptionsItemSelected(item);
 	}
@@ -151,39 +146,17 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 	public void onProfileView(MenuItem item) {
 		Log.d(TAG, "IN profile view");
 		Intent i = new Intent(this, ProfileActivity.class);
-	    i.putExtra("screenName", "authorizedUser");
 		startActivity(i);
 	}
 
 	public boolean onQueryTextSubmit(String queryStr) {
-//		SearchFragment searchFragment = new SearchFragment();
-//		Bundle args = new Bundle();
-//        args.putString("query", queryStr);
-//        searchFragment.setArguments(args);
-//		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//		ft.replace(R.id.flContainer, searchFragment);
-//		ft.commit();
+		ActionBar actionBar = getActionBar();
+		Tab selTab = actionBar.getSelectedTab();
+		Log.d(TAG, "Writing to shared pref" + queryStr);
+		writeQueryToSharedPref(queryStr);
+		actionBar.selectTab(selTab);
 		
-		Intent i = new Intent(this,SearchActivity.class);
-		i.putExtra("query", queryStr);
-		startActivity(i);
 		return true;
-	}
-
-	public void getUserAccountInfo() {
-		client.getUserAccountInformation(new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(JSONObject json) {
-				accountInfo = User.fromJSON(json);
-			}
-
-			@Override
-			public void onFailure(Throwable e, String s) {
-				Log.d("debug", "Posting Tweet to Timeline failed");
-				Log.d("debug", s.toString());
-
-			}
-		});
 	}
 
 	@Override

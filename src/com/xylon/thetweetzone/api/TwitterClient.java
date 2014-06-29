@@ -1,4 +1,4 @@
-package com.xylon.thetweetzone;
+package com.xylon.thetweetzone.api;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
@@ -23,13 +23,10 @@ import com.loopj.android.http.RequestParams;
  */
 public class TwitterClient extends OAuthBaseClient {
     public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
-    public static final String REST_URL = "https://api.twitter.com/1.1/"; // Change this, base API URL
-    public static final String REST_CONSUMER_KEY = "";       // Change this
-    public static final String REST_CONSUMER_SECRET = ""; // Change this
-    public static final String REST_CALLBACK_URL = "oauth://cpbasictweets"; // Change this (here and in manifest)
+ 
     
     public TwitterClient(Context context) {
-        super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
+        super(context, REST_API_CLASS, ApiConstants.REST_URL, ApiConstants.REST_CONSUMER_KEY, ApiConstants.REST_CONSUMER_SECRET, ApiConstants.REST_CALLBACK_URL);
     }
     
     /**
@@ -40,7 +37,7 @@ public class TwitterClient extends OAuthBaseClient {
      * @param handler
      */
     public void getHomeTimeline(long sinceId, long maxId, AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("statuses/home_timeline.json");
+    	String apiUrl = getApiUrl(ApiConstants.HOME_TIMELINE_URL);
     	RequestParams params = new RequestParams();
     	if ( sinceId > 0)
     		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
@@ -57,11 +54,30 @@ public class TwitterClient extends OAuthBaseClient {
      * @param handler
      */
     public void postStatusUpdate(String status, AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("statuses/update.json");
+    	String apiUrl = getApiUrl(ApiConstants.STATUS_UPDATE_URL);
     	RequestParams params = new RequestParams();
     	params.put("status", status);
     	client.post(apiUrl,params, handler);
     	
+    }
+    
+    /**
+     * Returns a collection of relevant Tweets matching a specified query.
+     * @param query ( required parameter - search string )
+     * @param sinceId (specify -1 if not used, if given returns tweets newer than)
+     * @param maxId ( specify -1 if not used, if given returns tweets older than)
+     * @param handler
+     */
+    public void searchTweets(String query, long sinceId, long maxId, AsyncHttpResponseHandler handler) {
+    	String apiUrl = getApiUrl(ApiConstants.SEARCH_URL);
+    	RequestParams params = new RequestParams();
+    	if ( sinceId > 0)
+    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
+    	if ( maxId > 0)
+    		params.put("max_id", Long.toString(maxId)); // older than specified id
+    	
+    	params.put("q", query);
+    	client.get(apiUrl,params, handler);
     }
     
     /**
@@ -71,7 +87,7 @@ public class TwitterClient extends OAuthBaseClient {
      * @param handler
      */
     public void postStatusUpdateInReply(String status, String replyId, AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("statuses/update.json");
+    	String apiUrl = getApiUrl(ApiConstants.STATUS_UPDATE_URL);
     	RequestParams params = new RequestParams();
     	params.put("status", status);
     	params.put("in_reply_to_status_id" , replyId);
@@ -84,7 +100,7 @@ public class TwitterClient extends OAuthBaseClient {
      * @param handler
      */
     public void getUserAccountInformation(AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("account/verify_credentials.json");
+    	String apiUrl = getApiUrl(ApiConstants.VERIFY_CREDENTIALS_URL);
     	client.get(apiUrl, null, handler);
     }
     
@@ -93,8 +109,8 @@ public class TwitterClient extends OAuthBaseClient {
      * @param sName
      * @param handler
      */
-    public void searchUserByScreenName(String sName, AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("users/show.json");
+    public void getUserProfileFromScreenName(String sName, AsyncHttpResponseHandler handler) {
+    	String apiUrl = getApiUrl(ApiConstants.SHOW_USERS_URL);
     	RequestParams params = new RequestParams();
     	params.put("screen_name", sName);
     	params.put("include_entities","false");
@@ -106,7 +122,7 @@ public class TwitterClient extends OAuthBaseClient {
      * this api can return only 800 tweets
      */
     public void getMentionTimeline(long sinceId, long maxId, AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+    	String apiUrl = getApiUrl(ApiConstants.MENTIONS_TIMELINE_URL);
       	RequestParams params = new RequestParams();
     	if ( sinceId > 0)
     		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
@@ -124,7 +140,7 @@ public class TwitterClient extends OAuthBaseClient {
      * @param handler
      */
     public void getUserTimeline(long sinceId, long maxId, AsyncHttpResponseHandler handler) {
-    	String apiUrl = getApiUrl("statuses/user_timeline.json");
+    	String apiUrl = getApiUrl(ApiConstants.USER_TIEMLINE_URL);
       	RequestParams params = new RequestParams();
     	if ( sinceId > 0)
     		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
@@ -142,7 +158,7 @@ public class TwitterClient extends OAuthBaseClient {
      * @param screenName
      */
     public void getMyFollowers(String userId, String screenName, AsyncHttpResponseHandler handler ) {
-       	String apiUrl = getApiUrl("followers/ids.json");
+       	String apiUrl = getApiUrl(ApiConstants.FOLLOWERS_URL);
     	RequestParams params = new RequestParams();
     	if ( screenName == null || screenName.equals(""))
     		params.put("user_id",userId);
@@ -160,7 +176,7 @@ public class TwitterClient extends OAuthBaseClient {
      * @param handler
      */
 	public void favoriteTweet(long tweetId, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("favorites/create.json");
+		String apiUrl = getApiUrl(ApiConstants.FAV_URL);
 		RequestParams params = new RequestParams();
 		if (tweetId > 0) {
 			params.put("id", Long.toString(tweetId));
@@ -175,7 +191,7 @@ public class TwitterClient extends OAuthBaseClient {
 	 * @param handler
 	 */
 	public void unFavoriteTweet(long tweetId, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("favorites/destroy.json");
+		String apiUrl = getApiUrl(ApiConstants.UNFAV_URL);
 		RequestParams params = new RequestParams();
 		if (tweetId > 0) {
 			params.put("id", Long.toString(tweetId));

@@ -213,16 +213,16 @@ public class Tweet extends Model implements Serializable {
 		return tweets;
 	}
 	
-	public boolean isReTweet() {
+	public String isReTweet() {
 		String body = this.getBody();
+		String screenName = null;
 		if (body.startsWith("RT")) {
 			int start = body.indexOf("@");
 			int end = body.indexOf(":");
-			String screenName = "";
 			if ((start != -1) && (end != -1))
-				return true;
+				screenName = body.substring(start + 1, end);
 		}
-		return false;
+		return screenName;
 	}
 	
 	@Override

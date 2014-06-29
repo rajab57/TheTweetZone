@@ -8,9 +8,9 @@ import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActivity;
 import com.xylon.thetweetzone.R;
-import com.xylon.thetweetzone.TwitterClient;
 import com.xylon.thetweetzone.R.layout;
 import com.xylon.thetweetzone.R.menu;
+import com.xylon.thetweetzone.api.TwitterClient;
 
 public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 

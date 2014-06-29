@@ -23,8 +23,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
+        android:onClick="onProfileView"
         android:layout_marginTop="20dp"
-        android:focusable="false"
+
         android:src="@drawable/ic_launcher" />
 
     <LinearLayout
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvReTweetName"
         android:layout_marginLeft="10dp"
+        android:focusable="false"
         android:layout_toRightOf="@+id/ivProfile"
         android:orientation="horizontal" >
 

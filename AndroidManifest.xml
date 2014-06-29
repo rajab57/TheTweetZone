@@ -45,12 +45,21 @@
             </intent-filter>
         </activity>
         <activity
-            andcom.xylon.thetweetzone.activities.TimelineActivityineActivity"
+            
+            android:name="com.xylon.thetweetzone.activities.TimelineActivity"
             android:label="@string/title_activity_timeline" >
         </activity>
         <activity
             android:name="com.xylon.thetweetzone.activities.TweetActivity"
             android:label="@string/title_activity_tweet" >
+        </activity>
+        <activity
+            android:name="com.xylon.thetweetzone.activities.ProfileActivity"
+            android:label="@string/title_activity_profile" >
+        </activity>
+        <activity
+            android:name="com.xylon.thetweetzone.activities.SearchActivity"
+            android:label="@string/title_activity_search" >
         </activity>
     </application>
 
