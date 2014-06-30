@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +18,7 @@ import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.models.User;
 
-public class ProfileActivity extends FragmentActivity {
+public class ProfileActivity extends FragmentActivity implements OnClickListener{
 
 	private User accountInfo;
 	private ImageView ivProfileImage;
@@ -26,6 +28,8 @@ public class ProfileActivity extends FragmentActivity {
 	private TextView tvFollowingCnt;
 	private TextView tvFollowersCnt;
 	private int twitterGray;
+	private TextView tvFollowing;
+	private TextView tvFollowers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,6 @@ public class ProfileActivity extends FragmentActivity {
 			loadUserProfileInfo(screenName);
 	}
 
-	
-
 	private void getViews() {
 		ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
 		tvUserName = (TextView) findViewById(R.id.tvUserName);
@@ -50,6 +52,10 @@ public class ProfileActivity extends FragmentActivity {
 		tvFollowingCnt = (TextView)findViewById(R.id.tvFollowingCnt);
 		tvFollowersCnt = (TextView)findViewById(R.id.tvFollowersCnt);
 		twitterGray = getResources().getColor(R.color.twitterGray);
+		tvFollowing = (TextView)findViewById(R.id.tvFollowing);
+		tvFollowers = (TextView)findViewById(R.id.tvFollowers);
+		tvFollowing.setOnClickListener(this);
+		tvFollowers.setOnClickListener(this);
 		
 	}
 
@@ -112,5 +118,24 @@ public class ProfileActivity extends FragmentActivity {
 			tvFollowersCnt.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 			
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (accountInfo != null) {
+			if (v.getId() == R.id.tvFollowing) {
+				Intent intent = new Intent(this, UsersListActivity.class);
+				intent.putExtra("user_name", accountInfo.getName());
+				intent.putExtra("key", "Following");
+				startActivity(intent);
+			}
+			if (v.getId() == R.id.tvFollowers) {
+				Intent intent = new Intent(this, UsersListActivity.class);
+				intent.putExtra("user_name", accountInfo.getName());
+				intent.putExtra("key", "Followers");
+				startActivity(intent);
+			}
+		}
+
 	}
 }

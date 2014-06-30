@@ -21,6 +21,8 @@ import com.activeandroid.annotation.Table;
 
 @Table(name = "Tweet")
 public class Tweet extends Model implements Serializable {
+	
+	private static String TAG = Tweet.class.getSimpleName();
 	@Column(name = "body")
 	public String body;
 	
@@ -52,6 +54,7 @@ public class Tweet extends Model implements Serializable {
 	public boolean retweeted;
 
 	// do not persist to database
+	@Column(name="favCount")
 	public int favCount;
 	
 	@Column(name="inReplyToUserId")
@@ -85,9 +88,15 @@ public class Tweet extends Model implements Serializable {
 							"display_url");
 				}
 			}
+			if (jsonObject.has("retweeted_status")) {
+				JSONObject json = jsonObject.getJSONObject("retweeted_status");
+				if (json != null) {
+					tweet.retweetCount = json.getInt("retweet_count");
+					tweet.favCount = json.getInt("favorite_count");
+				}
+			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d(TAG, e.toString());
 			return null;
 		}
 		// Extract values from the json to populate member variables

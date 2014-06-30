@@ -1,8 +1,10 @@
 package com.xylon.thetweetzone.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,25 +15,28 @@ import com.activeandroid.annotation.Table;
 @Table( name = "Users")
 public class User extends Model implements Serializable {
 	@Column(name = "name")
-	public String name;
+	private String name;
 	
 	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-	public long uid = -1;
+	private long uid = -1;
 	
 	@Column(name="screenName")
-	public String screenName;
+	private String screenName;
 	
 	@Column(name="profileImageUrl")
-	public String profileImageUrl;
+	private String profileImageUrl;
 	
 	@Column(name="followersCount")
-	public int followersCount;
+	private int followersCount;
 	
 	@Column(name="tweetsCount")
-	public int tweetsCount;
+	private int tweetsCount;
 	
 	@Column(name="followingCount")
-	public int followingCount;
+	private int followingCount;
+	
+	@Column(name="decription")
+	private String description;
 
 	public User() {
 		super();
@@ -47,6 +52,7 @@ public class User extends Model implements Serializable {
 			u.followersCount = jsonObject.getInt("followers_count");
 			u.tweetsCount = jsonObject.getInt("statuses_count");
 			u.followingCount = jsonObject.getInt("friends_count");
+			u.description = jsonObject.getString("description");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,10 +96,25 @@ public class User extends Model implements Serializable {
 	public int getFollowersCount() {
 		return followersCount;
 	}
+	public String getDescription() {
+		return description;
+	}
 	
-//	 // Used to return items from another table based on the foreign key
-//    public List<Tweet> tweets() {
-//        return getMany(Tweet.class, "User");
-//    }
-
+	public static ArrayList<User> fromJSONArray(JSONArray jsonArray) {
+		ArrayList<User> users = new ArrayList<User>();
+		for ( int i = 0; i < jsonArray.length(); ++i ) {
+			JSONObject userJson = null;
+			try {
+				userJson = jsonArray.getJSONObject(i);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				continue;
+			}
+			User user = User.fromJSON(userJson);
+			if (user != null )
+				users.add(user);
+		}
+		return users;
+	}
 }

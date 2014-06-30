@@ -1,11 +1,9 @@
 package com.xylon.thetweetzone.fragments;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.json.JSONArray;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,16 +12,14 @@ import android.view.ViewGroup;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.TwitterClientApp;
-import com.xylon.thetweetzone.activities.TweetActivity;
 import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.Tweet;
 
-public class MentionsTimelineFragement extends TweetsListFragment {
+public class NoScrollUserTimelineFragment extends TweetsListFragment {
 	
-	private static String TAG = MentionsTimelineFragement.class.getSimpleName();
 	private TwitterClient client;
-	private static int REQUEST_CODE = 21;
+	private static String TAG = NoScrollUserTimelineFragment.class.getSimpleName();
 
 	
 	@Override
@@ -32,31 +28,27 @@ public class MentionsTimelineFragement extends TweetsListFragment {
 		client = TwitterClientApp.getRestClient();
 		
 	}
-		
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-		setupListeners();
+		//setupListeners();
+		populateTimelineFromTwitter(1,-1);
 		return v;
 	}
 	
 	@Override
 	public void performActionOnScroll(long sinceId, long maxId) {
-		populateMentionsTimeline(sinceId, maxId);
+		
 	}
+	
 	@Override
 	public void performActionOnRefresh(long sinceId, long maxId) {
-		populateMentionsTimeline(sinceId, maxId);
-	}
-	@Override
-	public void performActionOnItemClick(Tweet item, int position) {
-		Intent i = new Intent(getActivity(), TweetActivity.class);
-		i.putExtra("position", position);
-		i.putExtra("tweet", item);
-		startActivityForResult(i, REQUEST_CODE);
-	}
 		
+	}
+
+
 	/**
 	 * Returns a collection of the most recent Tweets and retweets posted by the
 	 * authenticating user and the users they follow. The home timeline is
@@ -65,27 +57,22 @@ public class MentionsTimelineFragement extends TweetsListFragment {
 	 * @param sinceId
 	 * @param maxId
 	 */
-	public void populateMentionsTimeline(long sinceId, long maxId) {
+	public void populateTimelineFromTwitter(long sinceId, long maxId) {
 		
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
 			showProgressBar(); // 1
-			Log.d(TAG, "Testing" + sinceId + "::" + maxId );
-			client.getMentionTimeline(sinceId, maxId,
+			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
+			client.getUserTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
+
 						@Override
 						public void onSuccess(JSONArray json) {
-							Log.d(TAG, "Testing2");
-							hideProgressBar(); // 1
-							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
-							handleListenerResults(ts);
+							handleResults(json);
 						}
 						
 						@Override
 						public void onSuccess(int successCode, JSONArray json) {
-							Log.d(TAG, "Testing3");
-							hideProgressBar(); // 1
-							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
-							handleListenerResults(ts);
+							handleResults(json);
 						}
 
 						@Override
@@ -94,11 +81,23 @@ public class MentionsTimelineFragement extends TweetsListFragment {
 							Log.d("debug", s.toString());
 							handleListenerFailure();
 
-
 						}
 					});
 		} else {
 			makeToast("Network not available");
 		}
 	}
+	
+	public void handleResults(JSONArray json) {
+		hideProgressBar(); // 1
+		ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
+		// Send in only 3 results
+		ArrayList<Tweet> ts3 = new ArrayList<Tweet>();
+		for (int i = 0; i < 3; i++) {
+			ts3.add(ts.get(i));
+		}
+		handleListenerResults(ts3);
+		
+	}
+
 }

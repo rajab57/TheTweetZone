@@ -1,11 +1,11 @@
 package com.xylon.thetweetzone.fragments;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.TwitterClientApp;
+import com.xylon.thetweetzone.activities.TweetActivity;
 import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment.PostToTimelineListener;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
@@ -28,9 +29,8 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 	
 	private static String TAG = HomeTimelineFragment.class.getSimpleName();
 	private TwitterClient client;
-	private boolean isRefreshing = false;
-	private boolean onScroll = false;
-	
+	private static int REQUEST_CODE =20;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -58,21 +58,17 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 	@Override
 	public void performActionOnRefresh(long sinceId, long maxId) {
 		// fetch fresh tweets from the Twitter server
-		populateTimelineFromTwitter(tweets.get(0).getTid(), -1);  
+		populateTimelineFromTwitter(sinceId, maxId);  
+	}
+
+	@Override
+	public void performActionOnItemClick(Tweet item, int position) {
+		Intent i = new Intent(getActivity(), TweetActivity.class);
+		i.putExtra("position", position);
+		i.putExtra("tweet", item);
+		startActivityForResult(i, REQUEST_CODE);
 	}
 	
-	// Should be called manually when an async task has started
-	// Ensure that it is run on the UI thread
-	public void showProgressBar() {
-		Log.d(TAG,"Implement Progress Bar");
-	}
-	
-	public void hideProgressBar() {
-		Log.d(TAG, "Implement Progress Bar");
-	}
-	public void makeToast(String msg) {
-		Log.d(TAG,"Implement TOAST");
-	}
 	
 	/**
 	 * Returns a collection of the most recent Tweets and retweets posted by the
@@ -83,12 +79,9 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 	 * @param maxId
 	 */
 	public void populateTimelineFromTwitter(long sinceId, long maxId) {
-		
-		long mSinceId;
 
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
 			//showProgressBar(); // 1
-			mSinceId = sinceId;
 			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
 			client.getHomeTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
@@ -111,32 +104,14 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 									}
 								}
 							}
-							
-							if ( !isRefreshing || aTweets.isEmpty())
-								addAll(ts);
-							else {
-								Collections.reverse(ts);
-								long start = tweets.get(0).getTid();
-								for(Tweet tweet : ts) {
-									if ( tweet.getTid() == start) {
-										continue;
-									}
-									aTweets.insert(tweet, 0);
-								}
-							}
-							if (isRefreshing == true) {
-								lvTweets.onRefreshComplete();
-								lvTweets.setSelection(0);
-								isRefreshing = false;
-							}
+							handleListenerResults(ts);
 						}
 
 						@Override
 						public void onFailure(Throwable e, String s) {
 							Log.d("debug", e.toString());
 							Log.d("debug", s.toString());
-							lvTweets.onRefreshComplete();
-							hideProgressBar(); // 1
+							handleListenerFailure();
 
 						}
 					});

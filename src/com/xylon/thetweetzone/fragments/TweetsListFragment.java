@@ -1,6 +1,9 @@
 package com.xylon.thetweetzone.fragments;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,12 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
+import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.adapters.TweetArrayAdapter;
+import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.helpers.EndlessScrollListener;
-import com.xylon.thetweetzone.listeners.CustomRefreshListener;
-import com.xylon.thetweetzone.listeners.CustomScrollListener;
+import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.Tweet;
 
 import eu.erikw.PullToRefreshListView;
@@ -27,11 +34,10 @@ public class TweetsListFragment extends Fragment {
 	ArrayList<Tweet> tweets;
 	TweetArrayAdapter aTweets;
 	protected PullToRefreshListView lvTweets;
-	private boolean isRefreshing = false;
+	boolean isRefreshing = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		tweets = new ArrayList<Tweet>();
 		aTweets = new TweetArrayAdapter(getActivity(), tweets);
@@ -73,11 +79,12 @@ public class TweetsListFragment extends Fragment {
 					sinceId = 1;
 				} else {
 					if (!isRefreshing) {
-						maxId = tweets.get(aTweets.getCount() - 1).getTid();
+						maxId = tweets.get(aTweets.getCount() - 1).getTid()-1;
 
 					}
 				}
-				performActionOnScroll(sinceId, maxId+1);
+				if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
+				performActionOnScroll(sinceId, maxId);
 
 			}
 		});
@@ -94,8 +101,7 @@ public class TweetsListFragment extends Fragment {
 				// place such as when the network request has completed
 				// successfully.
 				if (!tweets.isEmpty()) {
-					// long sinceId = tweets.get(0).getUid();
-					performActionOnRefresh(tweets.get(0).getTid(), -1); // fetch
+					performActionOnRefresh(tweets.get(0).getTid()+1, -1); // fetch
 																		// fresh
 																		// tweets
 																		// from
@@ -114,30 +120,69 @@ public class TweetsListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long rowId) {
 
-				// TODO There should be a callback to the parent Activity
-				// which calls this intent
-
-				// Intent i = new Intent(,
-				// TweetActivity.class);
-				// ++position; // picks the previous item, probably starts at 0
-				// instead of 1
-				// i.putExtra("position", position);
-				// Tweet item = (Tweet) parent.getItemAtPosition(position);
-				// i.putExtra("tweet", item);
-				// startActivityForResult(i, REQUEST_CODE);
+				Tweet item = (Tweet) parent.getItemAtPosition(position);
+				performActionOnItemClick(item, ++position); //// picks the previous item, probably starts at 0
 
 			}
 
 		});
 	}
+	
+	public void performActionOnItemClick(Tweet item,int position) {
+		Log.d(TAG, "Implement your own method performActionOnItemClick");
+	}
 
 	public void performActionOnScroll(long sinceId, long maxId) {
-		Log.d(TAG, "PerfomActionOnScroll");
+		Log.d(TAG, "Implement your own method performActionOnScroll");
 
 	}
 
 	public void performActionOnRefresh(long sinceId, long maxId) {
-
+		Log.d(TAG, "Implement your own method performActionOnRefresh");
 	}
-
+	
+	// Should be called manually when an async task has started
+	// Ensure that it is run on the UI thread
+	public void showProgressBar() {
+		Log.d(TAG,"Implement Progress Bar");
+	}
+	
+	public void hideProgressBar() {
+		Log.d(TAG, "Implement Progress Bar");
+	}
+	public void makeToast(String msg) {
+		Log.d(TAG,"Implement TOAST");
+	}
+	
+	
+	protected void handleListenerResults(ArrayList<Tweet> ts) {
+		makeToast("Fetched tweets from Twitter server");
+		for (Tweet tweet : ts ){
+			Log.d(TAG,String.valueOf(tweet.getTid()));
+		}
+		if (!isRefreshing || aTweets.isEmpty())
+			addAll(ts);
+		else {
+			Collections.reverse(ts);
+			long start = tweets.get(0).getTid();
+			for (Tweet tweet : ts) {
+				if (tweet.getTid() == start) {
+					continue;
+				}
+				aTweets.insert(tweet, 0);
+			}
+		}
+		if (isRefreshing == true) {
+			isRefreshing = false;
+			lvTweets.onRefreshComplete();
+			lvTweets.setSelection(0);
+		}
+	}
+	
+	protected void handleListenerFailure() {
+		lvTweets.onRefreshComplete();
+		lvTweets.setSelection(0);
+		hideProgressBar(); // 1
+	}
+	
 }

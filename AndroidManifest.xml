@@ -45,7 +45,6 @@
             </intent-filter>
         </activity>
         <activity
-            
             android:name="com.xylon.thetweetzone.activities.TimelineActivity"
             android:label="@string/title_activity_timeline" >
         </activity>
@@ -60,6 +59,14 @@
         <activity
             android:name="com.xylon.thetweetzone.activities.SearchActivity"
             android:label="@string/title_activity_search" >
+        </activity>
+        <activity
+            android:name="com.xylon.thetweetzone.activities.DirectMessagesActivity"
+            android:label="@string/title_activity_direct_messages" >
+        </activity>
+        <activity
+            android:name="com.xylon.thetweetzone.activities.UsersListActivity"
+            android:label="@string/title_activity_following" >
         </activity>
     </application>
 

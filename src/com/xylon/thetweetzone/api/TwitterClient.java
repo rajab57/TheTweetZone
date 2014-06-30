@@ -8,6 +8,7 @@ import android.content.Context;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.xylon.thetweetzone.api.ApiConstants.UserType;
 
 /*
  * 
@@ -124,11 +125,12 @@ public class TwitterClient extends OAuthBaseClient {
     public void getMentionTimeline(long sinceId, long maxId, AsyncHttpResponseHandler handler) {
     	String apiUrl = getApiUrl(ApiConstants.MENTIONS_TIMELINE_URL);
       	RequestParams params = new RequestParams();
-    	if ( sinceId > 0)
-    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
-    	if ( maxId > 0)
-    		params.put("max_id", Long.toString(maxId)); // older than specified id
-    	
+//    	if ( sinceId > 0)
+//    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
+//    	if ( maxId > 0)
+//    		params.put("max_id", Long.toString(maxId)); // older than specified id
+    	System.out.println(sinceId);
+    	System.out.println(maxId);
     	client.get(apiUrl,params, handler);
     	
     }
@@ -156,9 +158,14 @@ public class TwitterClient extends OAuthBaseClient {
      * can spcify either userid or screename and search with either of them.
      * @param userId
      * @param screenName
+     * @param type  can be follower or following enum UserType
      */
-    public void getMyFollowers(String userId, String screenName, AsyncHttpResponseHandler handler ) {
-       	String apiUrl = getApiUrl(ApiConstants.FOLLOWERS_URL);
+    public void showUsersByType(String userId, String screenName,UserType type, AsyncHttpResponseHandler handler ) {
+    	String apiUrl = null;
+    	if ( type == UserType.FOLLOWERS)
+       	 	apiUrl = getApiUrl(ApiConstants.FOLLOWERS_URL);
+    	else if ( type == UserType.FOLLOWING)
+    		apiUrl = getApiUrl(ApiConstants.FOLLOWING_URL);
     	RequestParams params = new RequestParams();
     	if ( screenName == null || screenName.equals(""))
     		params.put("user_id",userId);
@@ -167,6 +174,7 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(apiUrl,params,handler);
     	
     }
+    
     
     /**
      * Favorites the status specified in the ID parameter as the authenticating user. 
@@ -198,5 +206,78 @@ public class TwitterClient extends OAuthBaseClient {
 		}
 		client.post(apiUrl, params, handler);
 	}
+	
+	
+	public void reTweet(long tweetId,AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl(ApiConstants.RETWEET_URL + tweetId + ".json");
+		client.post(apiUrl, null, handler);
+	}
+	
+	/**
+	 * Returns the 20 most recent direct messages sent to the authenticating user. 
+	 * @param sinceId
+	 * @param maxId
+	 * @param handler
+	 */
+	public void getDirectMessages(long sinceId, long maxId, AsyncHttpResponseHandler handler) { 
+	  	String apiUrl = getApiUrl(ApiConstants.GET_DIRRECT_URL);
+      	RequestParams params = new RequestParams();
+    	if ( sinceId > 0)
+    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
+    	if ( maxId > 0)
+    		params.put("max_id", Long.toString(maxId)); // older than specified id
+    	
+    	client.get(apiUrl,params, handler);
+	}
+	
+	/**
+	 * Returns the 20 most recent direct messages sent by the authenticating user. 
+	 * @param sinceId
+	 * @param maxId
+	 * @param handler
+	 */
+	public void getSentDirectMessages(long sinceId, long maxId,AsyncHttpResponseHandler handler) { 
+	  	String apiUrl = getApiUrl(ApiConstants.GET_SENT_DIRECT_URL);
+      	RequestParams params = new RequestParams();
+    	if ( sinceId > 0)
+    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
+    	if ( maxId > 0)
+    		params.put("max_id", Long.toString(maxId)); // older than specified id
+    	
+    	client.get(apiUrl,params, handler);
+	}
+	
+	/**
+	 * Destroys the direct message specified in the required ID parameter. 
+	 * The authenticating user must be the recipient of the specified direct message.
+	 * @param msgId
+	 * @param handler
+	 */
+	public void deleteDirectMessage(long msgId,AsyncHttpResponseHandler handler) { 
+	  	String apiUrl = getApiUrl(ApiConstants.DESTROY_DIRECT_URL);
+      	RequestParams params = new RequestParams();
+      	params.put("id",Long.toString(msgId) );   	
+    	client.get(apiUrl,params, handler);
+	}
+	
+	/**
+	 * Sends a new direct message to the specified user from the authenticating user.
+	 * @param msg
+	 * @param screenName
+	 * @param userId
+	 * @param handler
+	 */
+	public void sendDirectMessage(String msg, String screenName, long userId, AsyncHttpResponseHandler handler) { 
+	  	String apiUrl = getApiUrl(ApiConstants.SEND_DIRECT_URL);
+      	RequestParams params = new RequestParams();
+      	params.put("text",msg); 
+      	if (screenName != null && !screenName.equals(""))
+      		params.put("screen_name", screenName);
+      	if(userId > 0)
+      		params.put("user_id", Long.toString(userId));
+    	client.get(apiUrl,params, handler);
+	}
+	
+	
  
 }

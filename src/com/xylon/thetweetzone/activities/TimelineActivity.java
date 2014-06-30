@@ -154,6 +154,12 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 	    i.putExtra("screenName", "authorizedUser");
 		startActivity(i);
 	}
+	
+	public void onShowMessages(MenuItem item) {
+		Log.d(TAG, "IN Message view");
+		Intent i = new Intent(this,DirectMessagesActivity.class);
+		startActivity(i);
+	}
 
 	public boolean onQueryTextSubmit(String queryStr) {
 //		SearchFragment searchFragment = new SearchFragment();

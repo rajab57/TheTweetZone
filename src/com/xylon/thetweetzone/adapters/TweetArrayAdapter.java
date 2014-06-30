@@ -4,32 +4,34 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.activities.ProfileActivity;
-import com.xylon.thetweetzone.helpers.EndlessScrollListener;
+import com.xylon.thetweetzone.fragments.ReTweetDialogFragment;
+import com.xylon.thetweetzone.helpers.TweetActions;
 import com.xylon.thetweetzone.models.Tweet;
 import com.xylon.thetweetzone.models.TwitterDatabaseOperations;
 import com.xylon.thetweetzone.models.User;
 
-import eu.erikw.PullToRefreshListView.OnRefreshListener;
-
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 	
 	private static String TAG = TweetArrayAdapter.class.getSimpleName();
+	private Context mContext;
 	public TweetArrayAdapter(Context context, List<Tweet> tweets) {
 		super(context, 0, tweets);
+		mContext = context;
 	}
 	
 	// View lookup cache
@@ -40,6 +42,10 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     	TextView tvBody;
     	TextView tvTimeAgo;
     	TextView tvReTweetName;
+    	TextView tvRetweetCount;
+    	TextView tvFavCount;
+    	ImageButton ibFav;
+    	ImageButton ibRetweet;
     }
 
 	@Override
@@ -57,6 +63,10 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 			viewHolder.tvTimeAgo = (TextView)convertView.findViewById(R.id.tvTimeAgo);
 			viewHolder.tvReTweetName = (TextView)convertView.findViewById(R.id.tvReTweetName);
 			viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+			viewHolder.tvRetweetCount = (TextView)convertView.findViewById(R.id.tvRetweetCount);
+			viewHolder.tvFavCount = (TextView)convertView.findViewById(R.id.tvFavCount);	
+			viewHolder.ibFav = (ImageButton)convertView.findViewById(R.id.ibFav);
+			viewHolder.ibRetweet = (ImageButton)convertView.findViewById(R.id.ibRetweet);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -67,14 +77,19 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 		//populate view with tweet data
 		imageLoader.displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivProfileImage);
 		
-		// TIP: Set TAG on the image to get the screenName on click of image later
-		viewHolder.ivProfileImage.setTag (tweet.getUser().getScreenName());
+		
+		
+		if(tweet.getFavCount()> 0)
+			viewHolder.tvFavCount.setText(Integer.toString(tweet.getFavCount() ));
+		if(tweet.getRetweetCount() > 0)
+			viewHolder.tvRetweetCount.setText(Integer.toString(tweet.getRetweetCount()));
+		
 		User user = isReTweet(tweet);
 		if ( user == null  ) {
 			viewHolder.tvUserName.setText(tweet.getUser().getName());
 			viewHolder.tvOtherText.setText("@" + tweet.getUser().getScreenName());
 			viewHolder.tvBody.setText(tweet.getBody());
-			viewHolder.tvReTweetName.setText("");
+			viewHolder.tvReTweetName.setText("");			
 		}
 		else {
 			viewHolder.tvUserName.setText(user.getName());
@@ -84,6 +99,11 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 		}
 		Linkify.addLinks(viewHolder.tvBody,Linkify.WEB_URLS);  // Make links active
 		viewHolder.tvTimeAgo.setText(tweet.getCreatedAtFromNow());
+		
+		// TIP: Set TAG on the image to get the screenName on click of image later
+		viewHolder.ivProfileImage.setTag (tweet.getUser().getScreenName());
+		viewHolder.ibFav.setTag(tweet);
+		viewHolder.ibRetweet.setTag(tweet.getTid());
 		viewHolder.ivProfileImage
 				.setOnClickListener(new View.OnClickListener() {
 
@@ -99,6 +119,36 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 					}
 
 				});
+		
+		// Fav onclick
+		final TextView favcnt = viewHolder.tvFavCount;
+		final ImageButton favimg = viewHolder.ibFav;
+		viewHolder.ibFav.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				TweetActions.favTweet(v.getContext(), (Tweet) v.getTag(), favcnt, favimg);
+				
+			}
+		});
+		
+		// Retweet onClick
+		viewHolder.ibRetweet.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Open Dialog ( based on the current state of the Tweet isRetweeted or not ?)
+				// TODO Should this be at this level ???
+				if (mContext instanceof FragmentActivity) {
+					long tweetId = (Long)v.getTag();
+					FragmentActivity activity = (FragmentActivity) mContext;
+					FragmentManager fm = activity.getSupportFragmentManager();
+			        ReTweetDialogFragment retweetDialog = new ReTweetDialogFragment(tweetId);
+			        retweetDialog.show(fm, "fragment_edit_name");
+				}
+			}
+		});
+		
 		return convertView;
 	}
 	

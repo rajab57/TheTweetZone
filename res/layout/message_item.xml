@@ -1,22 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:descendantFocusability="blocksDescendants"
     android:padding="5dp" >
-
-    <TextView
-        android:id="@+id/tvReTweetName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:focusable="false"
-        android:text=""
-        android:textColor="@color/twitterGray"
-        android:textSize="10sp" />
 
     <ImageView
         android:id="@+id/ivProfile"
@@ -31,7 +18,7 @@
         android:id="@+id/lluserinfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvReTweetName"
+        android:layout_alignTop="@+id/ivProfile"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/ivProfile"
         android:focusable="false"
@@ -48,7 +35,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvOtherText"
+            android:id="@+id/tvScreenName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -64,7 +51,7 @@
         android:id="@+id/tvTimeAgo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/lluserinfo"
+        android:layout_alignRight="@+id/lluserinfo"
         android:layout_alignParentRight="true"
         android:focusable="false"
         android:text=""
@@ -81,50 +68,4 @@
         android:singleLine="false"
         android:text="This is the tweet Body"
         android:textSize="13sp" />
-
-    <LinearLayout
-        android:id="@+id/llicons"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBody"
-        android:layout_marginLeft="10dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/ibReply"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/reply3" />
-
-        <ImageButton
-            android:id="@+id/ibRetweet"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="40dp"
-            android:background="@null"
-            android:src="@drawable/retweet3" />
-
-        <TextView
-            android:id="@+id/tvRetweetCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
-
-        <ImageButton
-            android:id="@+id/ibFav"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="40dp"
-            android:background="@null"
-            android:src="@drawable/fav" />
-
-        <TextView
-            android:id="@+id/tvFavCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
-    </LinearLayout>
-
 </RelativeLayout>

@@ -12,9 +12,22 @@ public class ApiConstants {
 	protected static String SHOW_USERS_URL ="users/show.json";
 	protected static String MENTIONS_TIMELINE_URL = "statuses/mentions_timeline.json";
 	protected static String USER_TIEMLINE_URL ="statuses/user_timeline.json";
-	protected static String FOLLOWERS_URL = "followers/ids.json";
+	protected static String FOLLOWERS_URL = "followers/list.json";
+	protected static String FOLLOWING_URL = "friends/list.json";
 	protected static String FAV_URL = "favorites/create.json";
 	protected static String UNFAV_URL ="favorites/destroy.json";
 	protected static String SEARCH_URL="search/tweets.json";
+	protected static String RETWEET_URL ="statuses/retweet/";
+	protected static String GET_DIRRECT_URL ="direct_messages.json";
+	protected static String GET_SENT_DIRECT_URL = "direct_messages/sent.json";
+	protected static String GET_SINGLE_DIRECT_URL="direct_messages/show.json";
+	protected static String DESTROY_DIRECT_URL="direct_messages/destroy.json";
+	protected static String SEND_DIRECT_URL="direct_messages/new.json";
+	
+	public static enum UserType {
+		FOLLOWERS,
+		FOLLOWING
+	}
+	
 
 }

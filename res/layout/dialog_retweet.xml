@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Retweet this to your followers?" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="?android:attr/dividerHorizontal" />
+
+    <LinearLayout
+        style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:measureWithLargestChild="true"
+        android:orientation="horizontal"
+        android:paddingLeft="2dip"
+        android:paddingRight="2dip"
+        android:paddingTop="0dip" >
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:onClick="onCancel"
+            android:text="Cancel"
+            android:textAlignment="viewStart" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="50dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <Button
+            android:id="@+id/btnQuote"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:onClick="onQuote"
+            android:text="Quote" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="50dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <Button
+            android:id="@+id/btnRetweet"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:onClick="onRetweet"
+            android:text="Retweet" />
+    </LinearLayout>
+
+</LinearLayout>
