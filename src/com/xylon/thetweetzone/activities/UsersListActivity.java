@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.xylon.thetweetzone.R;
-import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.fragments.UserListFragment;
 
 public class UsersListActivity extends FragmentActivity {

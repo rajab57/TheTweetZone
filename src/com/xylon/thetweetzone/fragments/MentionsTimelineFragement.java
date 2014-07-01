@@ -1,7 +1,6 @@
 package com.xylon.thetweetzone.fragments;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.json.JSONArray;
 
@@ -69,21 +68,17 @@ public class MentionsTimelineFragement extends TweetsListFragment {
 		
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
 			showProgressBar(); // 1
-			Log.d(TAG, "Testing" + sinceId + "::" + maxId );
+			Log.d(TAG,"In Metntins timelien");
 			client.getMentionTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONArray json) {
-							Log.d(TAG, "Testing2");
-							hideProgressBar(); // 1
 							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
 							handleListenerResults(ts);
 						}
 						
 						@Override
 						public void onSuccess(int successCode, JSONArray json) {
-							Log.d(TAG, "Testing3");
-							hideProgressBar(); // 1
 							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
 							handleListenerResults(ts);
 						}

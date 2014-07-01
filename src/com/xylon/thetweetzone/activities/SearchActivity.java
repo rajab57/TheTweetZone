@@ -37,7 +37,6 @@ public class SearchActivity extends FragmentActivity implements OnQueryTextListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate");
 		// MUST request the feature before setting content view
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_search);
@@ -144,7 +143,6 @@ public class SearchActivity extends FragmentActivity implements OnQueryTextListe
 	}
 	
 	public void onProfileView(MenuItem item) {
-		Log.d(TAG, "IN profile view");
 		Intent i = new Intent(this, ProfileActivity.class);
 		startActivity(i);
 	}

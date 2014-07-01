@@ -36,7 +36,6 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="left"
-            android:onClick="onCancel"
             android:text="Cancel"
             android:textAlignment="viewStart" />
 
@@ -53,7 +52,6 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="left"
-            android:onClick="onQuote"
             android:text="Quote" />
 
         <View
@@ -69,7 +67,7 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="left"
-            android:onClick="onRetweet"
+            android:background="@null"
             android:text="Retweet" />
     </LinearLayout>
 

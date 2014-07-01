@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -17,8 +18,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.models.User;
+import com.xylon.thetweetzone.adapters.ProfileViewPagerAdapter;
 
-public class ProfileActivity extends FragmentActivity implements OnClickListener{
+public class ProfileViewPagerActivity extends FragmentActivity implements
+		OnClickListener {
 
 	private User accountInfo;
 	private ImageView ivProfileImage;
@@ -37,25 +40,24 @@ public class ProfileActivity extends FragmentActivity implements OnClickListener
 		getViews();
 		Intent intent = getIntent();
 		String screenName = intent.getStringExtra("screenName");
-		if(screenName.equals("authorizedUser"))
+		if (screenName.equals("authorizedUser"))
 			loadProfileInfo();
 		else
 			loadUserProfileInfo(screenName);
+
 	}
 
 	private void getViews() {
-		ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
-		tvUserName = (TextView) findViewById(R.id.tvUserName);
-		tvScreenName = (TextView) findViewById(R.id.tvScreenName);
-		tvTweetsCnt = (TextView)findViewById(R.id.tvTweetsCnt);
-		tvFollowingCnt = (TextView)findViewById(R.id.tvFollowingCnt);
-		tvFollowersCnt = (TextView)findViewById(R.id.tvFollowersCnt);
+
+		tvTweetsCnt = (TextView) findViewById(R.id.tvTweetsCnt);
+		tvFollowingCnt = (TextView) findViewById(R.id.tvFollowingCnt);
+		tvFollowersCnt = (TextView) findViewById(R.id.tvFollowersCnt);
 		getResources().getColor(R.color.twitterGray);
-		tvFollowing = (TextView)findViewById(R.id.tvFollowing);
-		tvFollowers = (TextView)findViewById(R.id.tvFollowers);
+		tvFollowing = (TextView) findViewById(R.id.tvFollowing);
+		tvFollowers = (TextView) findViewById(R.id.tvFollowers);
 		tvFollowing.setOnClickListener(this);
 		tvFollowers.setOnClickListener(this);
-		
+
 	}
 
 	private void loadProfileInfo() {
@@ -77,9 +79,9 @@ public class ProfileActivity extends FragmentActivity implements OnClickListener
 				});
 
 	}
-	
+
 	private void loadUserProfileInfo(String name) {
-		TwitterClientApp.getRestClient().getUserProfileFromScreenName(name, 
+		TwitterClientApp.getRestClient().getUserProfileFromScreenName(name,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject json) {
@@ -95,27 +97,37 @@ public class ProfileActivity extends FragmentActivity implements OnClickListener
 
 					}
 				});
-		
+
+	}
+
+	public void loadPage() {
+		ProfileViewPagerAdapter adapter = new ProfileViewPagerAdapter(accountInfo);
+		ViewPager myPager = null;
+	     //ViewPager myPager = (ViewPager) findViewById(R.id.myfivepanelpager);
+	     myPager.setAdapter(adapter);
+	     myPager.setCurrentItem(0);
 	}
 
 	private void setProfileInfo() {
 		if (accountInfo != null) {
-			//getActionBar().setTitle("@" + accountInfo.getScreenName());
+			// getActionBar().setTitle("@" + accountInfo.getScreenName());
 			getActionBar().setTitle("Profile");
-			ivProfileImage.setImageResource(android.R.color.transparent);
-			ImageLoader imageLoader = ImageLoader.getInstance();
-			imageLoader.displayImage(accountInfo.getProfileImageUrl(),
-					ivProfileImage);
-			tvUserName.setText(accountInfo.getName());
-			tvScreenName.setText("@" + accountInfo.getScreenName());
+
 			// TODO hardcoded grey. How to fetch from Resources and add to Html
-			String text = "<font color='black'><b>" + accountInfo.getTweetsCount() +  "<b></font><br><font color='#7D7D7D'>TWEETS</font>"; 
-			tvTweetsCnt.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
-			text = "<font color='black'><b>" + accountInfo.getFollowingCount() +  "<b></font><br><font color='#7D7D7D'>FOLLOWING</font>"; 
-			tvFollowingCnt.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
-			text = "<font color='black'><b>" + accountInfo.getFollowersCount() +  "<b></font><br><font color='#7D7D7D'>FOLLOWERS</font>"; 
-			tvFollowersCnt.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
-			
+			String text = "<font color='black'><b>"
+					+ accountInfo.getTweetsCount()
+					+ "<b></font><br><font color='#7D7D7D'>TWEETS</font>";
+			tvTweetsCnt.setText(Html.fromHtml(text),
+					TextView.BufferType.SPANNABLE);
+			text = "<font color='black'><b>" + accountInfo.getFollowingCount()
+					+ "<b></font><br><font color='#7D7D7D'>FOLLOWING</font>";
+			tvFollowingCnt.setText(Html.fromHtml(text),
+					TextView.BufferType.SPANNABLE);
+			text = "<font color='black'><b>" + accountInfo.getFollowersCount()
+					+ "<b></font><br><font color='#7D7D7D'>FOLLOWERS</font>";
+			tvFollowersCnt.setText(Html.fromHtml(text),
+					TextView.BufferType.SPANNABLE);
+
 		}
 	}
 

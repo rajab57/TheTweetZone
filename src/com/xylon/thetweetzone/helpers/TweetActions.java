@@ -4,6 +4,8 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.api.TwitterClient;
+import com.xylon.thetweetzone.fragments.ReTweetDialogFragment;
 import com.xylon.thetweetzone.models.Tweet;
 
 public class TweetActions {
@@ -57,5 +60,4 @@ public class TweetActions {
 			});
 		}
 	}
-
 }

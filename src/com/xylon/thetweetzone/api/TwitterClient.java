@@ -125,12 +125,10 @@ public class TwitterClient extends OAuthBaseClient {
     public void getMentionTimeline(long sinceId, long maxId, AsyncHttpResponseHandler handler) {
     	String apiUrl = getApiUrl(ApiConstants.MENTIONS_TIMELINE_URL);
       	RequestParams params = new RequestParams();
-//    	if ( sinceId > 0)
-//    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
-//    	if ( maxId > 0)
-//    		params.put("max_id", Long.toString(maxId)); // older than specified id
-    	System.out.println(sinceId);
-    	System.out.println(maxId);
+    	if ( sinceId > 0)
+    		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
+    	if ( maxId > 0)
+    		params.put("max_id", Long.toString(maxId)); // older than specified id
     	client.get(apiUrl,params, handler);
     	
     }
@@ -221,6 +219,7 @@ public class TwitterClient extends OAuthBaseClient {
 	 */
 	public void getDirectMessages(long sinceId, long maxId, AsyncHttpResponseHandler handler) { 
 	  	String apiUrl = getApiUrl(ApiConstants.GET_DIRRECT_URL);
+	  	System.out.println(apiUrl);
       	RequestParams params = new RequestParams();
     	if ( sinceId > 0)
     		params.put("since_id", Long.toString(sinceId)); // more recent than specified id

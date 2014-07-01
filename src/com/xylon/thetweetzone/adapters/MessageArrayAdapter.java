@@ -31,7 +31,6 @@ public class MessageArrayAdapter extends ArrayAdapter<Message> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		System.out.println("position " + position);
 		Message msg = getItem(position);
 		ViewHolder viewHolder;
 		if (convertView == null) {

@@ -17,14 +17,13 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.activities.TweetActivity;
 import com.xylon.thetweetzone.api.TwitterClient;
-import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment.PostToTimelineListener;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.listeners.TwitterFetch;
 import com.xylon.thetweetzone.models.Tweet;
 import com.xylon.thetweetzone.models.TwitterDatabaseOperations;
 import com.xylon.thetweetzone.models.User;
 
-public class HomeTimelineFragment extends TweetsListFragment implements PostToTimelineListener ,TwitterFetch {
+public class HomeTimelineFragment extends TweetsListFragment implements  TwitterFetch {
 											
 	
 	private static String TAG = HomeTimelineFragment.class.getSimpleName();
@@ -36,7 +35,6 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		client = TwitterClientApp.getRestClient();
-		Log.d (TAG, "OnCreate");
 		//populateTimeline(1,-1);
 	}
 	
@@ -51,7 +49,6 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 	
 	@Override
 	public void performActionOnScroll(long sinceId, long maxId) {
-		Log.d(TAG, "PerformActionOnScroll");
 		populateTimeline(sinceId, maxId);
 	}
 	
@@ -81,16 +78,14 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 	public void populateTimelineFromTwitter(long sinceId, long maxId) {
 
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
-			//showProgressBar(); // 1
+			showProgressBar(); // 1
 			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
 			client.getHomeTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
 
 						@Override
 						public void onSuccess(JSONArray json) {
-							//hideProgressBar(); // 1
 							ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
-							//makeToast("Fetched tweets from Twitter server");
 							PostTweetsToDBTask dbTask = new PostTweetsToDBTask();
 							dbTask.execute(tweets);
 							for (Tweet tweet : ts) {
@@ -162,7 +157,6 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 		
 		@Override
 		protected ArrayList<Tweet> doInBackground(Object... params) {
-			showProgressBar();// 3
 			sinceId = (Long) params[0];
 			maxId = (Long) params[1];
 			int count = (Integer) params[2];
@@ -186,7 +180,6 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 				makeToast("Data fetched from the Database ");
 				aTweets.addAll(result);
 			}
-			hideProgressBar(); // 3
 		}
 
 	}
@@ -197,19 +190,18 @@ public class HomeTimelineFragment extends TweetsListFragment implements PostToTi
 	 * @param s
 	 *            status message to be tweeted upto 140 chars
 	 */
-	@Override
-	public void onPostToTimeline(String s) {
-		showProgressBar(); // 4
+	public void postToTimeline(String s) {
 		client.postStatusUpdate(s, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
-				populateTimeline(1, -1);
+				if (!tweets.isEmpty()) {
+					performActionOnRefresh(tweets.get(0).getTid()+1, -1);
+				}
 			}
 
 			@Override
 			public void onSuccess(int statusCode, JSONObject response) {
 				tweets.clear();
-				// populateTimeline(1, -1); // there is delay in updates
 				Tweet tweet = Tweet.fromJSON(response);
 				aTweets.insert(tweet, 0);
 				aTweets.notifyDataSetChanged();

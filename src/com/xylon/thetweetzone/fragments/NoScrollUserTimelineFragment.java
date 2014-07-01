@@ -50,9 +50,8 @@ public class NoScrollUserTimelineFragment extends TweetsListFragment {
 
 
 	/**
-	 * Returns a collection of the most recent Tweets and retweets posted by the
-	 * authenticating user and the users they follow. The home timeline is
-	 * central to how most users interact with the Twitter service.
+	 * Returns a collection of the most recent Tweets and retweets posted from
+	 *  The user timeline
 	 * 
 	 * @param sinceId
 	 * @param maxId

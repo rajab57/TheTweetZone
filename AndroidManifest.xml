@@ -48,6 +48,10 @@
             android:name="com.xylon.thetweetzone.activities.TimelineActivity"
             android:label="@string/title_activity_timeline" >
         </activity>
+         <activity
+            android:name="com.xylon.thetweetzone.activities.TimelineViewPagerActivity"
+            android:label="@string/title_activity_timeline" >
+        </activity>
         <activity
             android:name="com.xylon.thetweetzone.activities.TweetActivity"
             android:label="@string/title_activity_tweet" >

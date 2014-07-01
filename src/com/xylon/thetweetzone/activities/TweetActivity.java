@@ -1,8 +1,5 @@
 package com.xylon.thetweetzone.activities;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -24,9 +21,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
-import com.xylon.thetweetzone.R.color;
-import com.xylon.thetweetzone.R.id;
-import com.xylon.thetweetzone.R.layout;
 import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.helpers.CommonUtils;
 import com.xylon.thetweetzone.models.Tweet;

@@ -81,14 +81,6 @@
         android:singleLine="false"
         android:text="This is the tweet Body"
         android:textSize="13sp" />
-    
-    <ImageView
-        android:id="@+id/ivTweetPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:layout_alignLeft="@+id/lluserinfo"
-        android:layout_below="@+id/tvBody" />
 
     <LinearLayout
         android:id="@+id/llicons"
@@ -111,7 +103,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="40dp"
-            android:src="@drawable/retweet" />
+            android:background="@null"
+            android:src="@drawable/retweet3" />
 
         <TextView
             android:id="@+id/tvRetweetCount"

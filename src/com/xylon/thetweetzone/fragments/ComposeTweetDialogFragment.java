@@ -44,7 +44,7 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 	PostToTimelineListener postToTimelinelistener;
  
     /** An interface to be implemented in the hosting activity for "OK" button click listener */
-    interface PostToTimelineListener {
+    public interface PostToTimelineListener {
         public void onPostToTimeline(String s);
     }
     
@@ -140,7 +140,6 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 					int count) {
 				
 				int numChar = s.length();
-				System.out.println("numchar " + numChar);
 				int leftCount = MAX_COUNT - numChar;
 				customizeTextCountAppearance(numChar, leftCount);
 				if (numChar > 0 && numChar <= MAX_COUNT && !btnTweet.isEnabled())

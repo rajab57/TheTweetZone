@@ -9,6 +9,9 @@
     <color name="twitterBlue">#00aced</color>
     <color name="twitterGray">#7D7D7D</color>
     <color name="twitterRed">#ffff0000</color>
+    <color name="twitterGreen">#aad450</color>
+    <color name="twitterOrange">#FF8300</color>
+    
 
     <string name="title_activity_timeline"></string>
     <string name="title_activity_profile">Profile</string>

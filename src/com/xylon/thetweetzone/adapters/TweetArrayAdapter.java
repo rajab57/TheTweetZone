@@ -25,7 +25,7 @@ import com.xylon.thetweetzone.models.Tweet;
 import com.xylon.thetweetzone.models.TwitterDatabaseOperations;
 import com.xylon.thetweetzone.models.User;
 
-public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
+public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 	
 	private static String TAG = TweetArrayAdapter.class.getSimpleName();
 	private Context mContext;
@@ -123,6 +123,8 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 		// Fav onclick
 		final TextView favcnt = viewHolder.tvFavCount;
 		final ImageButton favimg = viewHolder.ibFav;
+		final TextView retweetcount = viewHolder.tvRetweetCount;
+		final ImageButton retweetImg = viewHolder.ibRetweet;
 		viewHolder.ibFav.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -137,13 +139,14 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 			
 			@Override
 			public void onClick(View v) {
+				
+				
 				// Open Dialog ( based on the current state of the Tweet isRetweeted or not ?)
-				// TODO Should this be at this level ???
+				// TODO Should this be at this level ??? Fix the bad implementation
 				if (mContext instanceof FragmentActivity) {
 					long tweetId = (Long)v.getTag();
-					FragmentActivity activity = (FragmentActivity) mContext;
-					FragmentManager fm = activity.getSupportFragmentManager();
-			        ReTweetDialogFragment retweetDialog = new ReTweetDialogFragment(tweetId);
+					FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+			        ReTweetDialogFragment retweetDialog = new ReTweetDialogFragment(tweetId,retweetImg, retweetcount);
 			        retweetDialog.show(fm, "fragment_edit_name");
 				}
 			}
@@ -176,7 +179,5 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 		} else
 			return tweet.getBody();
 	}
-	
-
 	
 }

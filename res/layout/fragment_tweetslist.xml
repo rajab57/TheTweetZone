@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-   <eu.erikw.PullToRefreshListView
+ 
+    <eu.erikw.PullToRefreshListView
         android:id="@+id/lvTweets"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content" >
     </eu.erikw.PullToRefreshListView>
 
 </LinearLayout>

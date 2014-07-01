@@ -3,8 +3,6 @@ package com.xylon.thetweetzone.fragments;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,16 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
-import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.adapters.TweetArrayAdapter;
-import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.helpers.EndlessScrollListener;
-import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.Tweet;
 
 import eu.erikw.PullToRefreshListView;
@@ -35,6 +28,7 @@ public class TweetsListFragment extends Fragment {
 	TweetArrayAdapter aTweets;
 	protected PullToRefreshListView lvTweets;
 	boolean isRefreshing = false;
+	ProgressBar pb;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,10 +41,10 @@ public class TweetsListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout
-		Log.d(TAG, "OnCreateView");
 		View v = inflater.inflate(R.layout.fragment_tweetslist, container,
 				false);
 		lvTweets = (PullToRefreshListView) v.findViewById(R.id.lvTweets);
+		//pb = (ProgressBar)v.findViewById(R.id.pbTweetList);
 		// populateTimeline(1, -1); // OnScroll called onCreate
 		lvTweets.setAdapter(aTweets);
 
@@ -68,7 +62,6 @@ public class TweetsListFragment extends Fragment {
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				Log.d(TAG, "onScroll");
 				// Triggered only when new data needs to be appended to the list
 				// Add whatever code is needed to append new items to your
 				// AdapterView
@@ -94,7 +87,6 @@ public class TweetsListFragment extends Fragment {
 		lvTweets.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				Log.d(TAG, "onRefresh");
 				// Your code to refresh the list contents
 				// Make sure you call listView.onRefreshComplete()
 				// once the loading is done. This can be done from here or any
@@ -120,8 +112,8 @@ public class TweetsListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long rowId) {
 
-				Tweet item = (Tweet) parent.getItemAtPosition(position);
-				performActionOnItemClick(item, ++position); //// picks the previous item, probably starts at 0
+				Tweet item = (Tweet) parent.getItemAtPosition(++position);
+				performActionOnItemClick(item, position); //// picks the previous item, probably starts at 0
 
 			}
 
@@ -144,11 +136,12 @@ public class TweetsListFragment extends Fragment {
 	// Should be called manually when an async task has started
 	// Ensure that it is run on the UI thread
 	public void showProgressBar() {
-		Log.d(TAG,"Implement Progress Bar");
+		//pb.setVisibility(ProgressBar.VISIBLE);
 	}
 	
 	public void hideProgressBar() {
-		Log.d(TAG, "Implement Progress Bar");
+		// run a background job and once complete
+		//pb.setVisibility(ProgressBar.INVISIBLE);
 	}
 	public void makeToast(String msg) {
 		Log.d(TAG,"Implement TOAST");
@@ -156,10 +149,11 @@ public class TweetsListFragment extends Fragment {
 	
 	
 	protected void handleListenerResults(ArrayList<Tweet> ts) {
+		hideProgressBar(); // 1
 		makeToast("Fetched tweets from Twitter server");
-		for (Tweet tweet : ts ){
-			Log.d(TAG,String.valueOf(tweet.getTid()));
-		}
+//		for (Tweet tweet : ts ){
+//			Log.d(TAG,String.valueOf(tweet.getTid()));
+//		}
 		if (!isRefreshing || aTweets.isEmpty())
 			addAll(ts);
 		else {
