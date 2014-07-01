@@ -59,7 +59,7 @@ public class NoScrollUserTimelineFragment extends TweetsListFragment {
 	public void populateTimelineFromTwitter(long sinceId, long maxId) {
 		
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
-			showProgressBar(); // 1
+			showProgressBar();
 			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
 			client.getUserTimeline(sinceId, maxId,
 					new JsonHttpResponseHandler() {
@@ -88,7 +88,6 @@ public class NoScrollUserTimelineFragment extends TweetsListFragment {
 	}
 	
 	public void handleResults(JSONArray json) {
-		hideProgressBar(); // 1
 		ArrayList<Tweet> ts = Tweet.fromJSONArray(json);
 		// Send in only 3 results
 		ArrayList<Tweet> ts3 = new ArrayList<Tweet>();

@@ -44,7 +44,7 @@ public class TweetsListFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_tweetslist, container,
 				false);
 		lvTweets = (PullToRefreshListView) v.findViewById(R.id.lvTweets);
-		//pb = (ProgressBar)v.findViewById(R.id.pbTweetList);
+		pb = (ProgressBar)v.findViewById(R.id.pbTweetList);
 		// populateTimeline(1, -1); // OnScroll called onCreate
 		lvTweets.setAdapter(aTweets);
 
@@ -136,12 +136,12 @@ public class TweetsListFragment extends Fragment {
 	// Should be called manually when an async task has started
 	// Ensure that it is run on the UI thread
 	public void showProgressBar() {
-		//pb.setVisibility(ProgressBar.VISIBLE);
+		pb.setVisibility(ProgressBar.VISIBLE);
 	}
 	
 	public void hideProgressBar() {
 		// run a background job and once complete
-		//pb.setVisibility(ProgressBar.INVISIBLE);
+		pb.setVisibility(ProgressBar.GONE);
 	}
 	public void makeToast(String msg) {
 		Log.d(TAG,"Implement TOAST");

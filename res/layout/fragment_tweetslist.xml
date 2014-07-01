@@ -4,7 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
- 
+    <ProgressBar
+        android:id="@+id/pbTweetList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <eu.erikw.PullToRefreshListView
         android:id="@+id/lvTweets"
         android:layout_width="match_parent"
