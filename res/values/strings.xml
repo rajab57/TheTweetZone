@@ -7,7 +7,8 @@
     <string name="title_activity_photos">Flickr Photos</string>
 
     <color name="twitterBlue">#00aced</color>
-    <color name="twitterGray">#7D7D7D</color>
+    <color name="twitterGray1">#7D7D7D</color>
+    <color name="twitterGray">#c7c8ca</color>
     <color name="twitterRed">#ffff0000</color>
     <color name="twitterGreen">#aad450</color>
     <color name="twitterOrange">#FF8300</color>
