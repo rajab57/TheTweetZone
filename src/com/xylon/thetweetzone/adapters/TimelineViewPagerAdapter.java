@@ -7,10 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class TimelineViewPagerAdapter extends FragmentPagerAdapter {
 private static int NUM_ITEMS = 2;
 
-    public ViewPagerAdapter(FragmentManager fragmentManager) {
+    public TimelineViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 

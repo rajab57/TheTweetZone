@@ -60,6 +60,13 @@ public class Tweet extends Model implements Serializable {
 	@Column(name="inReplyToUserId")
 	public String inReplyToUserId;
 	
+	@Column(name="mediaUrl")
+	public String mediaUrl;
+	
+	public String getMediaUrl() {
+		return mediaUrl;
+	}
+
 	// Make sure to have a default constructor for every ActiveAndroid model
     public Tweet(){
         super();
@@ -85,7 +92,15 @@ public class Tweet extends Model implements Serializable {
 				if (jsonArr != null && jsonArr.length() > 0) {
 					tweet.url = jsonArr.getJSONObject(0).getString("url");
 					tweet.displayUrl = jsonArr.getJSONObject(0).getString(
-							"display_url");
+							"display_url");	
+				}
+				if ( jsonObj.has("media")) {
+					JSONArray jsonArr2 = jsonObj.getJSONArray("media");
+					if (jsonArr2 != null && jsonArr2.length() > 0) {
+						tweet.mediaUrl = jsonArr2.getJSONObject(0).getString("media_url");
+						tweet.displayUrl = jsonArr2.getJSONObject(0).getString(
+								"display_url");
+					}
 				}
 			}
 			if (jsonObject.has("retweeted_status")) {
@@ -95,6 +110,7 @@ public class Tweet extends Model implements Serializable {
 					tweet.favCount = json.getInt("favorite_count");
 				}
 			}
+			
 		} catch (JSONException e) {
 			Log.d(TAG, e.toString());
 			return null;

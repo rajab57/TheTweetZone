@@ -82,19 +82,30 @@
         android:text="This is the tweet Body"
         android:textSize="13sp" />
     
+    <LinearLayout
+        android:id="@+id/llMedia"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lluserinfo"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvBody" >
+  
     <ImageView
         android:id="@+id/ivTweetPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
         android:focusable="false"
         android:layout_alignLeft="@+id/lluserinfo"
-        android:layout_below="@+id/tvBody" />
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:scaleType="fitXY"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llicons"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBody"
+        android:layout_below="@+id/llMedia"
         android:layout_marginLeft="10dp"
         android:gravity="center"
         android:orientation="horizontal" >
@@ -103,20 +114,22 @@
             android:id="@+id/ibReply"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/reply3" />
+            android:background="@null"
+            android:src="@drawable/reply" />
 
         <ImageButton
             android:id="@+id/ibRetweet"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="40dp"
+            android:background="@null"
             android:src="@drawable/retweet" />
 
         <TextView
             android:id="@+id/tvRetweetCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/twitterGray"
             android:layout_marginLeft="10dp" />
 
         <ImageButton
@@ -125,12 +138,13 @@
             android:layout_height="20dp"
             android:layout_marginLeft="40dp"
             android:background="@null"
-            android:src="@drawable/fav" />
+            android:src="@drawable/star" />
 
         <TextView
             android:id="@+id/tvFavCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/twitterGray"
             android:layout_marginLeft="10dp" />
     </LinearLayout>
 

@@ -46,6 +46,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
     	TextView tvFavCount;
     	ImageButton ibFav;
     	ImageButton ibRetweet;
+    	ImageView ivTweetPhoto;
     }
 
 	@Override
@@ -67,6 +68,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			viewHolder.tvFavCount = (TextView)convertView.findViewById(R.id.tvFavCount);	
 			viewHolder.ibFav = (ImageButton)convertView.findViewById(R.id.ibFav);
 			viewHolder.ibRetweet = (ImageButton)convertView.findViewById(R.id.ibRetweet);
+			viewHolder.ivTweetPhoto = (ImageView)convertView.findViewById(R.id.ivTweetPhoto);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -77,7 +79,11 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		//populate view with tweet data
 		imageLoader.displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivProfileImage);
 		
-		
+		if(tweet.getMediaUrl() != null && !(tweet.getMediaUrl().equals(""))) {
+			imageLoader.displayImage(tweet.getMediaUrl(),viewHolder.ivTweetPhoto);
+		} else {
+			viewHolder.ivTweetPhoto.setVisibility(View.GONE);
+		}
 		
 		if(tweet.getFavCount()> 0)
 			viewHolder.tvFavCount.setText(Integer.toString(tweet.getFavCount() ));

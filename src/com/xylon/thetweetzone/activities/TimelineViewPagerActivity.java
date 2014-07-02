@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
-import com.xylon.thetweetzone.adapters.ViewPagerAdapter;
+import com.xylon.thetweetzone.adapters.TimelineViewPagerAdapter;
 import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
 import com.xylon.thetweetzone.fragments.HomeTimelineFragment;
@@ -46,7 +46,7 @@ public class TimelineViewPagerActivity extends FragmentActivity implements
 		client = TwitterClientApp.getRestClient();
 		getUserAccountInfo();
 		ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-		adapterViewPager = new ViewPagerAdapter(getSupportFragmentManager());
+		adapterViewPager = new TimelineViewPagerAdapter(getSupportFragmentManager());
 		vpPager.setAdapter(adapterViewPager);
 		// Attach the page change listener inside the activity
 		vpPager.setOnPageChangeListener(new OnPageChangeListener() {

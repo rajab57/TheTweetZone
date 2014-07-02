@@ -48,6 +48,7 @@ public class ProfileViewPagerAdapter extends PagerAdapter {
 			resId = showTagline();
 			view = inflater.inflate(resId, null);
 			TextView tvTagline = (TextView)view.findViewById(R.id.tvTagline);
+			tvTagline.setText(mUser.getDescription());
 			break;
 		}
 
