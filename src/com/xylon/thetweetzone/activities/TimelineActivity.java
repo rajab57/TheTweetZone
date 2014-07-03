@@ -118,7 +118,12 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 			dialogFragment.setArguments(args);
 			dialogFragment.show(getSupportFragmentManager(), "composeTweet");
 			return true;
-		} 
+		} else if ( id == R.id.action_message) {
+			onShowMessages(item);
+			
+		} else if ( id == R.id.action_profile) {
+			onProfileView(item);
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
