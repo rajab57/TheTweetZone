@@ -40,8 +40,8 @@ like the layout and decided to revert back to the old style.
 sure if they can have a separate rate limit. They have started showing up in the second
 video.
 
-## First Video - Demo of the entire app
-## Second Video - Demo of ViewPage for Home and Mention Timelines
+#### First Video - Demo of the entire app
+#### Second Video - Demo of ViewPage for Home and Mention Timelines
 
 
 ![Video Walkthrough](assets/TweetZone2.gif)
