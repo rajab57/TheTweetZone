@@ -19,6 +19,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.adapters.TimelineViewPagerAdapter;
+import com.xylon.thetweetzone.adapters.TweetArrayAdapter.ReplyToTweetListener;
 import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
 import com.xylon.thetweetzone.fragments.HomeTimelineFragment;
@@ -33,7 +34,7 @@ import com.xylon.thetweetzone.models.User;
  *
  */
 public class TimelineViewPagerActivity extends FragmentActivity implements
-		OnQueryTextListener {
+		OnQueryTextListener ,ReplyToTweetListener {
 
 	private static String TAG = TimelineViewPagerActivity.class.getSimpleName();
 	private HomeTimelineFragment homeFragment;
@@ -181,6 +182,18 @@ public class TimelineViewPagerActivity extends FragmentActivity implements
 	public boolean onQueryTextChange(String newText) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public void onReplyToTweet(String replyUserName, long statusId) {
+		ComposeTweetDialogFragment dialogFragment = new ComposeTweetDialogFragment();
+		Bundle args = new Bundle();
+		args.putSerializable("user", accountInfo);
+		args.putLong("status_id", statusId);
+		args.putString("action", "reply");
+		args.putString("reply_user", replyUserName);
+		dialogFragment.setArguments(args);
+		dialogFragment.show(getSupportFragmentManager(), "replyTweet");
 	}
 
 }
