@@ -12,6 +12,7 @@
     <color name="twitterRed">#ffff0000</color>
     <color name="twitterGreen">#aad450</color>
     <color name="twitterOrange">#FF8300</color>
+    <color name="twitterProfileGray">#808683</color>
     
 
     <string name="title_activity_timeline"></string>

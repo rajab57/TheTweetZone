@@ -1,15 +1,20 @@
 package com.xylon.thetweetzone.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.models.User;
 
@@ -85,4 +90,6 @@ public class ProfileViewPagerAdapter extends PagerAdapter {
 		// This is required !! took a while to figure that out.
 		return arg0 == (View) arg1;
 	}
+	
+
 }

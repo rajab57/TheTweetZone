@@ -137,6 +137,7 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 	public boolean onQueryTextSubmit(String queryStr) {		
 		Intent i = new Intent(this,SearchActivity.class);
 		i.putExtra("query", queryStr);
+		i.putExtra("account", accountInfo);
 		startActivity(i);
 		return true;
 	}

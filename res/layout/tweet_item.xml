@@ -98,7 +98,7 @@
         android:layout_alignLeft="@+id/lluserinfo"
         android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY" />
     </LinearLayout>
 
     <LinearLayout

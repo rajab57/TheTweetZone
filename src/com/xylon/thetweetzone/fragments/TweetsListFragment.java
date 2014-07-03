@@ -29,7 +29,6 @@ public class TweetsListFragment extends Fragment {
 	protected PullToRefreshListView lvTweets;
 	boolean isRefreshing = false;
 	ProgressBar pb;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

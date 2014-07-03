@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
+import com.xylon.thetweetzone.fragments.NoScrollUserTimelineFragment;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.User;
 
@@ -133,6 +135,17 @@ public class ProfileActivity extends FragmentActivity implements OnClickListener
 			tvFollowingCnt.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 			text = "<font color='black'><b>" + accountInfo.getFollowersCount() +  "<b></font><br><font color='#7D7D7D'>FOLLOWERS</font>"; 
 			tvFollowersCnt.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+			// Begin the transaction
+						NoScrollUserTimelineFragment fragment = new NoScrollUserTimelineFragment();
+						Bundle args = new Bundle();
+				        args.putString("screen_name", accountInfo.getScreenName());
+				        fragment.setArguments(args);
+						FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+						// Replace the container with the new fragment
+						ft.replace(R.id.fragUsers, fragment);
+						// or ft.add(R.id.your_placeholder, new FooFragment());
+						// Execute the changes specified
+						ft.commit();
 			
 		}
 	}

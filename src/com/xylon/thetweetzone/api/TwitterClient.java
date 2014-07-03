@@ -142,13 +142,15 @@ public class TwitterClient extends OAuthBaseClient {
      * @param maxId
      * @param handler
      */
-    public void getUserTimeline(long sinceId, long maxId, AsyncHttpResponseHandler handler) {
+    public void getUserTimeline(long sinceId, long maxId, String screenName , AsyncHttpResponseHandler handler) {
     	String apiUrl = getApiUrl(ApiConstants.USER_TIEMLINE_URL);
       	RequestParams params = new RequestParams();
     	if ( sinceId > 0)
     		params.put("since_id", Long.toString(sinceId)); // more recent than specified id
     	if ( maxId > 0)
     		params.put("max_id", Long.toString(maxId)); // older than specified id
+    	if (screenName != null && !screenName.equals(""))
+    		params.put("screen_name", screenName);
     	
     	client.get(apiUrl,params, handler);
     	

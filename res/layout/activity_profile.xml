@@ -5,7 +5,8 @@
     android:background="@android:color/white"
     tools:context="${packageName}.${activityClass}" >
 
-	<android.support.v4.view.ViewPager android:id="@+id/vpProfile"
+	<android.support.v4.view.ViewPager 
+	  android:id="@+id/vpProfile"
 	  android:layout_width="match_parent"
 	  android:layout_height="150dp"
 	  android:layout_alignParentTop="true" />
@@ -39,7 +40,7 @@
             android:layout_weight=".32"
             android:padding="10dp"
             android:singleLine="false"
-            android:text="FOLLOWING" />
+            android:text="cnt" />
 
         <View
             android:id="@+id/divider2"
@@ -54,9 +55,10 @@
             android:layout_weight=".32"
             android:padding="10dp"
             android:singleLine="false"
-            android:text="FOLLOWERS" />
+            android:text="cnt" />
     </LinearLayout>
 
+ 
     <LinearLayout
         android:id="@+id/llList"
         android:layout_width="match_parent"
@@ -77,10 +79,9 @@
             android:layout_marginTop="5dp"
             android:background="@color/twitterGray" />
 
-        <fragment
+        <FrameLayout
             android:id="@+id/fragUsers"
-            android:name="com.xylon.thetweetzone.fragments.NoScrollUserTimelineFragment"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
         <View
@@ -116,5 +117,6 @@
             android:layout_height="wrap_content"
             android:text="Followers" />
     </LinearLayout>
+
 
 </RelativeLayout>

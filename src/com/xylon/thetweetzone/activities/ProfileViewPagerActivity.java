@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
@@ -21,10 +22,13 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.adapters.ProfileViewPagerAdapter;
+import com.xylon.thetweetzone.adapters.TweetArrayAdapter.ReplyToTweetListener;
+import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
+import com.xylon.thetweetzone.fragments.NoScrollUserTimelineFragment;
 import com.xylon.thetweetzone.models.User;
 
 public class ProfileViewPagerActivity extends FragmentActivity implements
-		OnClickListener {
+		OnClickListener, ReplyToTweetListener {
 
 	private static String TAG = ProfileViewPagerActivity.class.getSimpleName();
 	private User accountInfo;
@@ -63,12 +67,11 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 	}
 
 	private void loadProfileInfo() {
-		Log.d(TAG, "calling profiel load");
 		TwitterClientApp.getRestClient().getUserAccountInformation(
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject json) {
-						Log.d(TAG, "111");
+
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
 						loadPage();
@@ -76,7 +79,6 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 					}
 					@Override
 					public void onSuccess(JSONObject json) {
-						Log.d(TAG, "222");
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
 						loadPage();
@@ -84,7 +86,6 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 
 					@Override
 					public void onFailure(Throwable e, String s) {
-						Log.d(TAG,"333");
 						Log.d("debug", "Posting Tweet to Timeline failed");
 						Log.d("debug", s.toString());
 
@@ -98,7 +99,6 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject json) {
-						Log.d(TAG, "YYYY");
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
 						loadPage();
@@ -107,7 +107,6 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 					
 					@Override
 					public void onSuccess(JSONObject json) {
-						Log.d(TAG, "XXXX");
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
 						loadPage();
@@ -137,10 +136,9 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 		final ViewPager vp = (ViewPager) findViewById(R.id.vpProfile);
 		//vp.setUser(accountInfo);
 		vp .setAdapter(adapter);
-		vp.setCurrentItem(0);
+
 		if (accountInfo.getBannerUrl() != null
 				&& !accountInfo.getBannerUrl().equals("")) {
-			Log.d(TAG, "have bg");
 			ImageLoader imageLoader = ImageLoader.getInstance();
 			imageLoader.loadImage(accountInfo.getBannerUrl(),
 					new ImageLoadingListener() {
@@ -176,8 +174,11 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 
 						}
 					});
+		} else {
+			vp.setBackgroundColor(getResources().getColor(R.color.twitterProfileGray));
 		}
-		//adapter.notifyDataSetChanged();
+		vp.setCurrentItem(0);
+
 	}
 
 	private void setProfileInfo() {
@@ -199,6 +200,17 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 					+ "<b></font><br><font color='#7D7D7D'>FOLLOWERS</font>";
 			tvFollowersCnt.setText(Html.fromHtml(text),
 					TextView.BufferType.SPANNABLE);
+			// Begin the transaction
+			NoScrollUserTimelineFragment fragment = new NoScrollUserTimelineFragment();
+			Bundle args = new Bundle();
+	        args.putString("screen_name", accountInfo.getScreenName());
+	        fragment.setArguments(args);
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			// Replace the container with the new fragment
+			ft.replace(R.id.fragUsers, fragment);
+			// or ft.add(R.id.your_placeholder, new FooFragment());
+			// Execute the changes specified
+			ft.commit();
 
 		}
 	}
@@ -221,6 +233,20 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 		}
 
 	}
+	
+	// TODO How to avoid duplication!!
+	@Override
+	public void onReplyToTweet(String replyUserName, long statusId) {
+		ComposeTweetDialogFragment dialogFragment = new ComposeTweetDialogFragment();
+		Bundle args = new Bundle();
+		args.putSerializable("user", accountInfo);
+		args.putLong("status_id", statusId);
+		args.putString("action", "reply");
+		args.putString("reply_user", replyUserName);
+		dialogFragment.setArguments(args);
+		dialogFragment.show(getSupportFragmentManager(), "replyTweet");
+	}
+
 	
 	
 

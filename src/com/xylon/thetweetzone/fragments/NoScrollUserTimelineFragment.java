@@ -19,6 +19,7 @@ import com.xylon.thetweetzone.models.Tweet;
 public class NoScrollUserTimelineFragment extends TweetsListFragment {
 	
 	private TwitterClient client;
+	private String screenName;
 	private static String TAG = NoScrollUserTimelineFragment.class.getSimpleName();
 
 	
@@ -26,6 +27,7 @@ public class NoScrollUserTimelineFragment extends TweetsListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		client = TwitterClientApp.getRestClient();
+		screenName = getArguments().getString("screen_name", "");
 		
 	}
 	
@@ -61,7 +63,7 @@ public class NoScrollUserTimelineFragment extends TweetsListFragment {
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
 			showProgressBar();
 			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
-			client.getUserTimeline(sinceId, maxId,
+			client.getUserTimeline(sinceId, maxId,screenName,
 					new JsonHttpResponseHandler() {
 
 						@Override

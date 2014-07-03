@@ -22,12 +22,14 @@ public class UserTimelineFragment extends TweetsListFragment {
 	
 	private TwitterClient client;
 	private static int REQUEST_CODE = 23;
+	private String screenName;
 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		client = TwitterClientApp.getRestClient();
+		screenName = getArguments().getString("screen_name", "");
 		
 	}
 	
@@ -71,7 +73,7 @@ public class UserTimelineFragment extends TweetsListFragment {
 		if (NetworkingUtils.isNetworkAvailable(getActivity())) {
 			showProgressBar(); // 1
 			if (sinceId == 1 )  { tweets.clear(); aTweets.clear(); }
-			client.getUserTimeline(sinceId, maxId,
+			client.getUserTimeline(sinceId, maxId,screenName,
 					new JsonHttpResponseHandler() {
 
 						@Override

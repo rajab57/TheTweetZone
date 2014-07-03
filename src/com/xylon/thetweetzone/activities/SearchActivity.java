@@ -16,17 +16,21 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import com.xylon.thetweetzone.R;
+import com.xylon.thetweetzone.adapters.TweetArrayAdapter.ReplyToTweetListener;
 import com.xylon.thetweetzone.api.TwitterClient;
+import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
 import com.xylon.thetweetzone.fragments.SearchFragment;
 import com.xylon.thetweetzone.listeners.FragmentTabListener;
+import com.xylon.thetweetzone.models.User;
 
-public class SearchActivity extends FragmentActivity implements OnQueryTextListener {
+public class SearchActivity extends FragmentActivity implements OnQueryTextListener, ReplyToTweetListener {
 
 	private static String TAG = SearchActivity.class.getSimpleName();
 
 	TwitterClient client;
 	private SearchView searchView;
 	private SharedPreferences prefs;  // shared preferences 
+	private User accountInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class SearchActivity extends FragmentActivity implements OnQueryTextListe
 		// Get from SearchAction Bar
 		Intent intent = getIntent();
 	    String query = intent.getStringExtra("query");
+	    accountInfo = (User) intent.getSerializableExtra("account");
 		
 	    // Write to SharedPreferences
 	    writeQueryToSharedPref(query);
@@ -155,6 +160,19 @@ public class SearchActivity extends FragmentActivity implements OnQueryTextListe
 	public boolean onQueryTextChange(String newText) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	// TODO how to avoid duplication !!
+	@Override
+	public void onReplyToTweet(String replyUserName, long statusId) {
+		ComposeTweetDialogFragment dialogFragment = new ComposeTweetDialogFragment();
+		Bundle args = new Bundle();
+		args.putSerializable("user", accountInfo);
+		args.putLong("status_id", statusId);
+		args.putString("action", "reply");
+		args.putString("reply_user", replyUserName);
+		dialogFragment.setArguments(args);
+		dialogFragment.show(getSupportFragmentManager(), "replyTweet");
 	}
 
 }
