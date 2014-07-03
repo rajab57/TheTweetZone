@@ -42,3 +42,5 @@ sure if they can have a separate rate limit.
 
 ![Video Walkthrough](assets/TweetZone2.gif)
 
+![Video Walkthrough](assets/TweetZone2bVP.gif)
+
