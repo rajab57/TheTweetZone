@@ -36,8 +36,12 @@
 like the layout and decided to revert back to the old style.
 
 ## Issues
-1. Had inlne images in the tweets list working and it stopped displaying. I am not
-sure if they can have a separate rate limit.
+1. Had inline images in the tweets list working and it stopped displaying. I am not
+sure if they can have a separate rate limit. They have started showing up in the second
+video.
+
+## First Video - Demo of the entire app
+## Second Video - Demo of ViewPage for Home and Mention Timelines
 
 
 ![Video Walkthrough](assets/TweetZone2.gif)
