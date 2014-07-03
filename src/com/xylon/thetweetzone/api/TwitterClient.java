@@ -52,12 +52,15 @@ public class TwitterClient extends OAuthBaseClient {
     /**
      * Post status update in your timeline
      * @param status
+     * @param statusId tweetId (for replies )
      * @param handler
      */
-    public void postStatusUpdate(String status, AsyncHttpResponseHandler handler) {
+    public void postStatusUpdate(String status, long statusId , AsyncHttpResponseHandler handler) {
     	String apiUrl = getApiUrl(ApiConstants.STATUS_UPDATE_URL);
     	RequestParams params = new RequestParams();
     	params.put("status", status);
+    	if (statusId > 0 ) // reply tweet
+    		params.put("in_reply_to_status_id", status);
     	client.post(apiUrl,params, handler);
     	
     }

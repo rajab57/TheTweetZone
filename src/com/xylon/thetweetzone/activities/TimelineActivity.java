@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
+import com.xylon.thetweetzone.adapters.TweetArrayAdapter.ReplyToTweetListener;
 import com.xylon.thetweetzone.api.TwitterClient;
 import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
 import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment.PostToTimelineListener;
@@ -26,7 +26,7 @@ import com.xylon.thetweetzone.fragments.MentionsTimelineFragement;
 import com.xylon.thetweetzone.listeners.FragmentTabListener;
 import com.xylon.thetweetzone.models.User;
 
-public class TimelineActivity extends FragmentActivity implements OnQueryTextListener, PostToTimelineListener{
+public class TimelineActivity extends FragmentActivity implements OnQueryTextListener, PostToTimelineListener , ReplyToTweetListener{
 
 	private static String TAG = TimelineActivity.class.getSimpleName();
 	TwitterClient client;
@@ -111,11 +111,12 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 		int id = item.getItemId();
 
 		if (id == R.id.action_compose) {
-			DialogFragment dialogFragment = new ComposeTweetDialogFragment();
+			ComposeTweetDialogFragment dialogFragment = new ComposeTweetDialogFragment();
 			Bundle args = new Bundle();
 			args.putSerializable("user", accountInfo);
+			args.putString("action", "compose");
 			dialogFragment.setArguments(args);
-			dialogFragment.show(getFragmentManager(), "composeTweet");
+			dialogFragment.show(getSupportFragmentManager(), "composeTweet");
 			return true;
 		} 
 
@@ -163,9 +164,21 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 	}
 
 	@Override
-	public void onPostToTimeline(String s) {
+	public void onPostToTimeline(String s, long statusId) {
 		HomeTimelineFragment homeFragment = (HomeTimelineFragment) getSupportFragmentManager().findFragmentByTag("HomeTimelineFragment");
-		homeFragment.postToTimeline(s);
+		homeFragment.postToTimeline(s, statusId);
+	}
+	
+	@Override
+	public void onReplyToTweet(String replyUserName, long statusId) {
+		ComposeTweetDialogFragment dialogFragment = new ComposeTweetDialogFragment();
+		Bundle args = new Bundle();
+		args.putSerializable("user", accountInfo);
+		args.putLong("status_id", statusId);
+		args.putString("action", "reply");
+		args.putString("reply_user", replyUserName);
+		dialogFragment.setArguments(args);
+		dialogFragment.show(getSupportFragmentManager(), "replyTweet");
 	}
 
 }

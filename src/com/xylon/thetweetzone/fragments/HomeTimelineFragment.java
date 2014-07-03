@@ -189,9 +189,10 @@ public class HomeTimelineFragment extends TweetsListFragment implements  Twitter
 	 * 
 	 * @param s
 	 *            status message to be tweeted upto 140 chars
+	 * @param statusId tweet id
 	 */
-	public void postToTimeline(String s) {
-		client.postStatusUpdate(s, new JsonHttpResponseHandler() {
+	public void postToTimeline(String s, long statusId) {
+		client.postStatusUpdate(s, statusId, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
 				if (!tweets.isEmpty()) {

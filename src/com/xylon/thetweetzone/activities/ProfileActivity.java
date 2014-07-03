@@ -19,6 +19,13 @@ import com.xylon.thetweetzone.TwitterClientApp;
 import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.User;
 
+/**
+ * ProfileActivity.java is replaced by ProfileViewPagerActivity
+ * since it gives more closer look to Twitter by swiping to see 
+ * Tagline(description)
+ * @author raji
+ *
+ */
 public class ProfileActivity extends FragmentActivity implements OnClickListener{
 
 	private static String TAG = ProfileActivity.class.getSimpleName();

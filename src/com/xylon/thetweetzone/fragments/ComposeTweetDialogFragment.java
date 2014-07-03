@@ -4,11 +4,11 @@ package com.xylon.thetweetzone.fragments;
 
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,9 +23,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
-import com.xylon.thetweetzone.R.color;
-import com.xylon.thetweetzone.R.id;
-import com.xylon.thetweetzone.R.layout;
 import com.xylon.thetweetzone.models.User;
 
 public class ComposeTweetDialogFragment extends DialogFragment {
@@ -38,6 +35,10 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 	int twitterGrey;
 	int twitterBlue;
 	int twitterRed;
+	String action;
+	User userAccount;
+	long statusId;
+	String replyUserName;
 	
 	
 	 /** Declaring the interface, to invoke a callback function in the implementing activity class */
@@ -45,13 +46,18 @@ public class ComposeTweetDialogFragment extends DialogFragment {
  
     /** An interface to be implemented in the hosting activity for "OK" button click listener */
     public interface PostToTimelineListener {
-        public void onPostToTimeline(String s);
+        public void onPostToTimeline(String s, long statusId);
     }
     
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		
-		User userAccount = (User) getArguments().getSerializable("user");
+		statusId = 0L;
+		userAccount = (User) getArguments().getSerializable("user");
+		action = getArguments().getString("action");
+		if( action.equals("reply")) {
+			statusId = getArguments().getLong("status_id");
+			replyUserName = getArguments().getString("reply_user");
+		}
 		final Dialog dialog = new Dialog(getActivity());	
 		twitterGrey = getResources().getColor(R.color.twitterGray);
 		twitterBlue = getResources().getColor(R.color.twitterBlue);
@@ -99,7 +105,10 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 		imageLoader.displayImage(userAccount.getProfileImageUrl(), ivProfileImage);
 		tvScreenName.setText(userAccount.getName());
 		tvScreenName2.setText("@" + userAccount.getScreenName());
-		
+		if (action.equals("reply")) {
+			// has to have authorized user name
+			etTweet.setText("@" + replyUserName);
+		} 
 	}
 	
 	private void disableButton() {
@@ -156,7 +165,7 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 				// Post it timeline 
-				postToTimelinelistener.onPostToTimeline(etTweet.getText().toString());
+				postToTimelinelistener.onPostToTimeline(etTweet.getText().toString(), statusId);
 				
 				// and close dialog
 				dismiss();

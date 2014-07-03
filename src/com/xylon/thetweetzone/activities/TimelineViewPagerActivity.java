@@ -2,12 +2,12 @@ package com.xylon.thetweetzone.activities;
 
 import org.json.JSONObject;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,8 +24,14 @@ import com.xylon.thetweetzone.fragments.ComposeTweetDialogFragment;
 import com.xylon.thetweetzone.fragments.HomeTimelineFragment;
 import com.xylon.thetweetzone.fragments.MentionsTimelineFragement;
 import com.xylon.thetweetzone.models.User;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 
+/**
+ * Exprimented with ViewPager instead of ActionBar Tabs
+ * and dont like the way it looks. So not using this for
+ * now.
+ * @author raji
+ *
+ */
 public class TimelineViewPagerActivity extends FragmentActivity implements
 		OnQueryTextListener {
 
@@ -125,11 +131,11 @@ public class TimelineViewPagerActivity extends FragmentActivity implements
 		int id = item.getItemId();
 
 		if (id == R.id.action_compose) {
-			DialogFragment dialogFragment = new ComposeTweetDialogFragment();
+			ComposeTweetDialogFragment dialogFragment = new ComposeTweetDialogFragment();
 			Bundle args = new Bundle();
 			args.putSerializable("user", accountInfo);
 			dialogFragment.setArguments(args);
-			dialogFragment.show(getFragmentManager(), "composeTweet");
+			dialogFragment.show(getSupportFragmentManager(), "composeTweet");
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
