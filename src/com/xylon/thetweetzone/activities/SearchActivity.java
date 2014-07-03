@@ -1,7 +1,5 @@
 package com.xylon.thetweetzone.activities;
 
-import org.json.JSONObject;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.content.Context;
@@ -9,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +15,10 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.api.TwitterClient;
-import com.xylon.thetweetzone.fragments.MentionsTimelineFragement;
 import com.xylon.thetweetzone.fragments.SearchFragment;
 import com.xylon.thetweetzone.listeners.FragmentTabListener;
-import com.xylon.thetweetzone.models.User;
 
 public class SearchActivity extends FragmentActivity implements OnQueryTextListener {
 
@@ -143,7 +137,7 @@ public class SearchActivity extends FragmentActivity implements OnQueryTextListe
 	}
 	
 	public void onProfileView(MenuItem item) {
-		Intent i = new Intent(this, ProfileActivity.class);
+		Intent i = new Intent(this, ProfileViewPagerActivity.class);
 		startActivity(i);
 	}
 

@@ -137,7 +137,7 @@ public class TimelineViewPagerActivity extends FragmentActivity implements
 
 	public void onProfileView(MenuItem item) {
 		Log.d(TAG, "IN profile view");
-		Intent i = new Intent(this, ProfileActivity.class);
+		Intent i = new Intent(this, ProfileViewPagerActivity.class);
 		i.putExtra("screenName", "authorizedUser");
 		startActivity(i);
 	}

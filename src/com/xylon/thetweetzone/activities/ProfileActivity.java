@@ -16,10 +16,12 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
+import com.xylon.thetweetzone.helpers.NetworkingUtils;
 import com.xylon.thetweetzone.models.User;
 
 public class ProfileActivity extends FragmentActivity implements OnClickListener{
 
+	private static String TAG = ProfileActivity.class.getSimpleName();
 	private User accountInfo;
 	private ImageView ivProfileImage;
 	private TextView tvUserName;
@@ -59,13 +61,15 @@ public class ProfileActivity extends FragmentActivity implements OnClickListener
 	}
 
 	private void loadProfileInfo() {
+		if (NetworkingUtils.isNetworkAvailable(this)) {
+			Log.d(TAG, "Netowrk available");
 		TwitterClientApp.getRestClient().getUserAccountInformation(
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject json) {
+						Log.d(TAG, "1");
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
-
 					}
 
 					@Override
@@ -74,7 +78,14 @@ public class ProfileActivity extends FragmentActivity implements OnClickListener
 						Log.d("debug", s.toString());
 
 					}
+					@Override
+					public void onFailure(Throwable e, JSONObject json) {
+						Log.d(TAG, json.toString());
+					}
 				});
+		} else {
+			Log.d(TAG, "Network not available");
+		}
 
 	}
 	

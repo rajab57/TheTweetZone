@@ -3,6 +3,7 @@ package com.xylon.thetweetzone.adapters;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,14 +14,24 @@ import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.models.User;
 
 public class ProfileViewPagerAdapter extends PagerAdapter {
-	
+
+	private static String TAG = ProfileViewPagerAdapter.class.getSimpleName();
 	User mUser;
+
 	public ProfileViewPagerAdapter(User accountInfo) {
+		mUser = accountInfo;
+	}
+
+	public void setUser(User accountInfo) {
 		mUser = accountInfo;
 	}
 
 	public int getCount() {
 		return 2;
+	}
+
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
 	}
 
 	public Object instantiateItem(View collection, int position) {
@@ -34,6 +45,7 @@ public class ProfileViewPagerAdapter extends PagerAdapter {
 		case 0:
 			resId = showProfile();
 			view = inflater.inflate(resId, null);
+			Log.d(TAG, mUser.toString());
 			ImageView ivProfileImage = (ImageView) view.findViewById(R.id.ivProfileImage);
 			TextView tvUserName = (TextView) view.findViewById(R.id.tvUserName);
 			TextView tvScreenName = (TextView) view.findViewById(R.id.tvScreenName);
@@ -67,10 +79,10 @@ public class ProfileViewPagerAdapter extends PagerAdapter {
 		resId = R.layout.profile_view;
 		return resId;
 	}
-	
+
 	@Override
 	public boolean isViewFromObject(View arg0, Object arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		// This is required !! took a while to figure that out.
+		return arg0 == (View) arg1;
 	}
 }

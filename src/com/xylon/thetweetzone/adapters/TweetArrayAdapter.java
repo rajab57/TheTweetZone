@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.activities.ProfileActivity;
+import com.xylon.thetweetzone.activities.ProfileViewPagerActivity;
 import com.xylon.thetweetzone.fragments.ReTweetDialogFragment;
 import com.xylon.thetweetzone.helpers.TweetActions;
 import com.xylon.thetweetzone.models.Tweet;
@@ -117,7 +118,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 					public void onClick(View v) {
 						String screenName = (String) v.getTag();
 						Intent i = new Intent(v.getContext(),
-								ProfileActivity.class);
+								ProfileViewPagerActivity.class);
 						// screenName is passed to the activity
 						i.putExtra("screenName", screenName);
 						v.getContext().startActivity(i);

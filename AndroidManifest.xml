@@ -61,6 +61,10 @@
             android:label="@string/title_activity_profile" >
         </activity>
         <activity
+            android:name="com.xylon.thetweetzone.activities.ProfileViewPagerActivity"
+            android:label="@string/title_activity_profile" >
+        </activity>
+        <activity
             android:name="com.xylon.thetweetzone.activities.SearchActivity"
             android:label="@string/title_activity_search" >
         </activity>

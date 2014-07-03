@@ -123,7 +123,7 @@ public class TimelineActivity extends FragmentActivity implements OnQueryTextLis
 	}
 	
 	public void onProfileView(MenuItem item) {
-		Intent i = new Intent(this, ProfileActivity.class);
+		Intent i = new Intent(this, ProfileViewPagerActivity.class);
 	    i.putExtra("screenName", "authorizedUser");
 		startActivity(i);
 	}

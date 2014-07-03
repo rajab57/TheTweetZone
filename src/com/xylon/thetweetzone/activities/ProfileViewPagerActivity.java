@@ -3,6 +3,8 @@ package com.xylon.thetweetzone.activities;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -10,23 +12,22 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.xylon.thetweetzone.R;
 import com.xylon.thetweetzone.TwitterClientApp;
-import com.xylon.thetweetzone.models.User;
 import com.xylon.thetweetzone.adapters.ProfileViewPagerAdapter;
+import com.xylon.thetweetzone.models.User;
 
 public class ProfileViewPagerActivity extends FragmentActivity implements
 		OnClickListener {
 
+	private static String TAG = ProfileViewPagerActivity.class.getSimpleName();
 	private User accountInfo;
-	private ImageView ivProfileImage;
-	private TextView tvUserName;
-	private TextView tvScreenName;
 	private TextView tvTweetsCnt;
 	private TextView tvFollowingCnt;
 	private TextView tvFollowersCnt;
@@ -44,6 +45,7 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 			loadProfileInfo();
 		else
 			loadUserProfileInfo(screenName);
+		// loadPage(); Of course you cannot call here, have to call once Profile is loaded. dah!!
 
 	}
 
@@ -61,17 +63,28 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 	}
 
 	private void loadProfileInfo() {
+		Log.d(TAG, "calling profiel load");
 		TwitterClientApp.getRestClient().getUserAccountInformation(
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject json) {
+						Log.d(TAG, "111");
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
+						loadPage();
 
+					}
+					@Override
+					public void onSuccess(JSONObject json) {
+						Log.d(TAG, "222");
+						accountInfo = User.fromJSON(json);
+						setProfileInfo();
+						loadPage();
 					}
 
 					@Override
 					public void onFailure(Throwable e, String s) {
+						Log.d(TAG,"333");
 						Log.d("debug", "Posting Tweet to Timeline failed");
 						Log.d("debug", s.toString());
 
@@ -85,9 +98,19 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject json) {
+						Log.d(TAG, "YYYY");
 						accountInfo = User.fromJSON(json);
 						setProfileInfo();
+						loadPage();
 
+					}
+					
+					@Override
+					public void onSuccess(JSONObject json) {
+						Log.d(TAG, "XXXX");
+						accountInfo = User.fromJSON(json);
+						setProfileInfo();
+						loadPage();
 					}
 
 					@Override
@@ -96,16 +119,65 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 						Log.d("debug", s.toString());
 
 					}
+					
+					@Override
+					public void onFailure(Throwable e, JSONObject json) {
+						Log.d(TAG, json.toString());
+					}
 				});
 
 	}
 
 	public void loadPage() {
-		ProfileViewPagerAdapter adapter = new ProfileViewPagerAdapter(accountInfo);
-		ViewPager myPager = null;
-	     //ViewPager myPager = (ViewPager) findViewById(R.id.myfivepanelpager);
-	     myPager.setAdapter(adapter);
-	     myPager.setCurrentItem(0);
+		ProfileViewPagerAdapter adapter = new ProfileViewPagerAdapter(
+				accountInfo);
+
+		//ViewPager vp = null;
+		// TODO How to pass other data to Adapter ????
+		final ViewPager vp = (ViewPager) findViewById(R.id.vpProfile);
+		//vp.setUser(accountInfo);
+		vp .setAdapter(adapter);
+		vp.setCurrentItem(0);
+		if (accountInfo.getBannerUrl() != null
+				&& !accountInfo.getBannerUrl().equals("")) {
+			Log.d(TAG, "have bg");
+			ImageLoader imageLoader = ImageLoader.getInstance();
+			imageLoader.loadImage(accountInfo.getBannerUrl(),
+					new ImageLoadingListener() {
+
+						@Override
+						public void onLoadingCancelled(String arg0, View arg1) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void onLoadingFailed(String arg0, View arg1,
+								FailReason arg2) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void onLoadingStarted(String arg0, View arg1) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void onLoadingComplete(String imageUri,
+								View view, Bitmap loadedImage) {
+							Log.d(TAG, "on loading complete");
+							// super.onLoadingComplete(imageUri, view,
+							// loadedImage);
+							//vp.setBackground(new BitmapDrawable(this, loadedImage));
+							vp.setBackgroundDrawable(new BitmapDrawable(
+									loadedImage));
+
+						}
+					});
+		}
+		//adapter.notifyDataSetChanged();
 	}
 
 	private void setProfileInfo() {
@@ -149,4 +221,7 @@ public class ProfileViewPagerActivity extends FragmentActivity implements
 		}
 
 	}
+	
+	
+
 }

@@ -3,36 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rlProfile"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_alignParentRight="true"
     android:layout_alignParentTop="true"
-    android:background="@color/twitterGray" >
+     >
 
-    <ImageView
-        android:id="@+id/ivProfileImage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" >
-    </ImageView>
+        <LinearLayout
+            android:id="@+id/llProfileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/rounded_corner"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="20dp" >
 
-    <TextView
-        android:id="@+id/tvUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfileImage"
-        android:layout_centerHorizontal="true"
-        android:singleLine="true"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true">
+            </ImageView>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvScreenName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvUserName"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llProfileImage"
+            android:layout_centerHorizontal="true"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:text="foo"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvScreenName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvUserName"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="\@foo"
+            android:textColor="@android:color/white" />
 
 </RelativeLayout>

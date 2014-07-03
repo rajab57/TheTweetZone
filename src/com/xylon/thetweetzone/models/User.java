@@ -37,6 +37,12 @@ public class User extends Model implements Serializable {
 	
 	@Column(name="decription")
 	private String description;
+	
+	@Column(name="backgroundImageUrl") 
+	private String backgroundIamgeUrl;
+	
+	@Column(name="bannerUrl")
+	private String bannerUrl;
 
 	public User() {
 		super();
@@ -53,6 +59,9 @@ public class User extends Model implements Serializable {
 			u.tweetsCount = jsonObject.getInt("statuses_count");
 			u.followingCount = jsonObject.getInt("friends_count");
 			u.description = jsonObject.getString("description");
+			u.backgroundIamgeUrl = jsonObject.getString("profile_background_image_url");
+			if(jsonObject.has("profile_banner_url"))
+				u.bannerUrl = jsonObject.getString("profile_banner_url");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,12 +93,17 @@ public class User extends Model implements Serializable {
 		return profileImageUrl;
 	}
 	
+	public String getBannerUrl() {
+		return bannerUrl;
+	}
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(name + ":");
 		sb.append(uid +":");
 		sb.append(screenName +":");
 		sb.append(profileImageUrl + ":");
+		if (backgroundIamgeUrl != null)
+			sb.append(backgroundIamgeUrl + ":");
 		return sb.toString();
 		
 	}
@@ -98,6 +112,10 @@ public class User extends Model implements Serializable {
 	}
 	public String getDescription() {
 		return description;
+	}
+	
+	public String getBackgroundIamgeUrl() {
+		return backgroundIamgeUrl;
 	}
 	
 	public static ArrayList<User> fromJSONArray(JSONArray jsonArray) {
